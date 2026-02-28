@@ -31,7 +31,7 @@ export default function Home(): ReactElement {
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-center gap-8'>
-      <h1 className='cinzel-title text-primary text-6xl font-semibold tracking-wide'>
+      <h1 className='engraving-title text-primary text-6xl tracking-widest'>
         NEMEA
       </h1>
       <p className='text-muted-foreground font-sans text-lg'>

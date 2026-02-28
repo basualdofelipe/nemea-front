@@ -133,9 +133,13 @@ html {
   }
 }
 
-/* Cinzel display font utility */
-.cinzel-title {
+/* Engraving CC display font utilities */
+.engraving-title {
   font-family: var(--font-display), var(--font-sans);
+}
+
+.engraving-shaded {
+  font-family: var(--font-display-shaded), var(--font-sans);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,15 +1,21 @@
 import type { Metadata } from 'next';
 import type { ReactElement, ReactNode } from 'react';
-import { Cinzel, Poppins, JetBrains_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
+import { Poppins, JetBrains_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import './globals.css';
 
-const cinzel = Cinzel({
-  subsets: ['latin'],
-  weight: ['400', '600', '700'],
+const engravingCC = localFont({
+  src: '../../public/fonts/EngravingCC.ttf',
   display: 'swap',
   variable: '--font-display',
+});
+
+const engravingShaded = localFont({
+  src: '../../public/fonts/EngravingShadedCC.ttf',
+  display: 'swap',
+  variable: '--font-display-shaded',
 });
 
 const poppins = Poppins({
@@ -40,7 +46,7 @@ export default function RootLayout({
     <html
       lang='es'
       suppressHydrationWarning
-      className={`${cinzel.variable} ${poppins.variable} ${jetbrainsMono.variable}`}
+      className={`${engravingCC.variable} ${engravingShaded.variable} ${poppins.variable} ${jetbrainsMono.variable}`}
     >
       <body className='font-sans antialiased'>
         <ThemeProvider>
