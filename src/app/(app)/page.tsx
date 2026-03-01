@@ -30,7 +30,7 @@ export default function Home(): ReactElement {
   }
 
   return (
-    <div className='flex min-h-screen flex-col items-center justify-center gap-8'>
+    <div className='flex flex-col items-center justify-center gap-8 py-20'>
       <h1 className='engraving-title text-primary text-6xl tracking-widest'>
         NEMEA
       </h1>
