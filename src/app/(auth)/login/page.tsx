@@ -49,30 +49,28 @@ export default async function LoginPage({
   }
 
   return (
-    <div className='flex min-h-screen items-center justify-center px-4'>
-      <Card className='w-full max-w-sm'>
-        <CardHeader className='items-center space-y-2 text-center'>
-          <h1 className='engraving-title text-primary text-4xl tracking-widest'>
-            NEMEA
-          </h1>
-          <p className='text-muted-foreground text-sm'>
-            Gestion de costos para marroquineria
-          </p>
-        </CardHeader>
-        <CardContent>
-          <form action={handleGoogleSignIn}>
-            <Button
-              type='submit'
-              variant='outline'
-              size='lg'
-              className='w-full gap-3'
-            >
-              <GoogleIcon />
-              Ingresar con Google
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className='w-full max-w-sm'>
+      <CardHeader className='items-center space-y-2 text-center'>
+        <h1 className='engraving-title text-primary text-4xl tracking-widest'>
+          NEMEA
+        </h1>
+        <p className='text-muted-foreground text-sm'>
+          Gestion de costos para marroquineria
+        </p>
+      </CardHeader>
+      <CardContent>
+        <form action={handleGoogleSignIn}>
+          <Button
+            type='submit'
+            variant='outline'
+            size='lg'
+            className='w-full gap-3'
+          >
+            <GoogleIcon />
+            Ingresar con Google
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

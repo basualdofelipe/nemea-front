@@ -1,7 +1,6 @@
 'use client';
 
 import type { ReactElement } from 'react';
-import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -13,6 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
 
 function getInitials(name?: string | null, email?: string | null): string {
   if (name) {
@@ -38,13 +39,12 @@ export function Header(): ReactElement | null {
   const { user } = session;
 
   return (
-    <header className='border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur'>
-      <div className='flex h-14 items-center justify-between px-4 sm:px-6'>
-        <Link href='/' className='flex items-center'>
-          <span className='engraving-title text-primary text-xl tracking-widest'>
-            NEMEA
-          </span>
-        </Link>
+    <header className='border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex h-14 w-full shrink-0 items-center gap-2 border-b backdrop-blur'>
+      <div className='flex flex-1 items-center justify-between px-4'>
+        <div className='flex items-center gap-2'>
+          <SidebarTrigger className='-ml-1' />
+          <Separator orientation='vertical' className='mr-2 h-4' />
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

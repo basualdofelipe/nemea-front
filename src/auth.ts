@@ -5,7 +5,7 @@ interface BackendAuthResponse {
   data: {
     accessToken: string;
     user: {
-      id: number;
+      id: string;
       email: string;
       role: string;
       name: string | null;
