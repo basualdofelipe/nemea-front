@@ -40,7 +40,7 @@ export default async function CatalogosPage(): Promise<ReactElement> {
       </div>
 
       <Tabs defaultValue={DIMENSIONS[0].key}>
-        <TabsList className='flex-wrap'>
+        <TabsList className='w-full overflow-x-auto'>
           {DIMENSIONS.map((d) => (
             <TabsTrigger key={d.key} value={d.key}>
               {d.label}
