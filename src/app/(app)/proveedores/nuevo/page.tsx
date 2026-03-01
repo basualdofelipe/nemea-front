@@ -14,6 +14,19 @@ import {
   type SupplierFormData,
 } from '@/components/suppliers/SupplierForm';
 
+function cleanSupplierData(
+  data: SupplierFormData,
+): Record<string, string | undefined> {
+  return {
+    name: data.name,
+    address: data.address || undefined,
+    email: data.email || undefined,
+    phone: data.phone || undefined,
+    whatsapp: data.whatsapp || undefined,
+    description: data.description || undefined,
+  };
+}
+
 export default function NuevoProveedorPage(): ReactElement {
   const router = useRouter();
   const { data: session } = useSession();
@@ -25,7 +38,7 @@ export default function NuevoProveedorPage(): ReactElement {
     try {
       await apiClientFetch('/api/suppliers', token, {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify(cleanSupplierData(data)),
       });
       toast.success('Proveedor creado');
       router.push('/proveedores');

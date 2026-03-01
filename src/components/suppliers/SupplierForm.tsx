@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 const supplierSchema = z.object({
   name: z.string().min(1, 'El nombre es obligatorio').max(255),
   address: z.string().max(500).optional().or(z.literal('')),
-  email: z.string().email('Email invalido').optional().or(z.literal('')),
+  email: z.string().email('Email invalido').or(z.literal('')).optional(),
   phone: z.string().max(50).optional().or(z.literal('')),
   whatsapp: z.string().max(50).optional().or(z.literal('')),
   description: z.string().optional().or(z.literal('')),
@@ -95,7 +95,6 @@ export function SupplierForm({
             <Label htmlFor='email'>Email</Label>
             <Input
               id='email'
-              type='email'
               {...register('email')}
               placeholder='email@ejemplo.com'
               disabled={isLoading}

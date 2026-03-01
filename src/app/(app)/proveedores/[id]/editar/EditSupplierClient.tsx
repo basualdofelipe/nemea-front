@@ -11,6 +11,19 @@ import {
   type SupplierFormData,
 } from '@/components/suppliers/SupplierForm';
 
+function cleanSupplierData(
+  data: SupplierFormData,
+): Record<string, string | undefined> {
+  return {
+    name: data.name,
+    address: data.address || undefined,
+    email: data.email || undefined,
+    phone: data.phone || undefined,
+    whatsapp: data.whatsapp || undefined,
+    description: data.description || undefined,
+  };
+}
+
 interface Supplier {
   id: string;
   name: string;
@@ -48,7 +61,7 @@ export function EditSupplierClient({
     try {
       await apiClientFetch(`/api/suppliers/${supplier.id}`, token, {
         method: 'PUT',
-        body: JSON.stringify(data),
+        body: JSON.stringify(cleanSupplierData(data)),
       });
       toast.success('Proveedor actualizado');
       router.push('/proveedores');
