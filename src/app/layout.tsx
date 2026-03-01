@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import { Poppins, JetBrains_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/providers/ThemeProvider';
+import { SessionProvider } from '@/providers/SessionProvider';
 import './globals.css';
 
 const engravingCC = localFont({
@@ -50,8 +51,10 @@ export default function RootLayout({
     >
       <body className='font-sans antialiased'>
         <ThemeProvider>
-          {children}
-          <Toaster />
+          <SessionProvider>
+            {children}
+            <Toaster />
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>
