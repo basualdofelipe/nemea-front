@@ -3,12 +3,13 @@
 import type { ReactElement } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, Truck } from 'lucide-react';
+import { Home, BookOpen, Truck, Package } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -21,10 +22,12 @@ interface NavItem {
   icon: typeof Home;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { label: 'Inicio', href: '/', icon: Home },
+const TOP_ITEMS: NavItem[] = [{ label: 'Inicio', href: '/', icon: Home }];
+
+const DATOS_BASE_ITEMS: NavItem[] = [
   { label: 'Catalogos', href: '/catalogos', icon: BookOpen },
   { label: 'Proveedores', href: '/proveedores', icon: Truck },
+  { label: 'Insumos', href: '/insumos', icon: Package },
 ];
 
 export function AppSidebar(): ReactElement {
@@ -35,6 +38,23 @@ export function AppSidebar(): ReactElement {
       return pathname === '/';
     }
     return pathname.startsWith(href);
+  }
+
+  function renderNavItems(items: NavItem[]): ReactElement[] {
+    return items.map((item) => (
+      <SidebarMenuItem key={item.href}>
+        <SidebarMenuButton
+          asChild
+          isActive={isActive(item.href)}
+          tooltip={item.label}
+        >
+          <Link href={item.href}>
+            <item.icon />
+            <span>{item.label}</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    ));
   }
 
   return (
@@ -52,22 +72,13 @@ export function AppSidebar(): ReactElement {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {NAV_ITEMS.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive(item.href)}
-                    tooltip={item.label}
-                  >
-                    <Link href={item.href}>
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            <SidebarMenu>{renderNavItems(TOP_ITEMS)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Datos base</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(DATOS_BASE_ITEMS)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
