@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactElement } from 'react';
+import { useEffect, type ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -85,6 +85,28 @@ export function SupplyFormDialog({
           initialPrice: '',
         },
   });
+
+  useEffect(() => {
+    if (supply) {
+      reset({
+        name: supply.name,
+        typeId: supply.type.id,
+        unitType: supply.unitType,
+        notes: supply.notes ?? '',
+        supplierId: '',
+        initialPrice: '',
+      });
+    } else {
+      reset({
+        name: '',
+        typeId: '',
+        supplierId: '',
+        unitType: 'm2',
+        notes: '',
+        initialPrice: '',
+      });
+    }
+  }, [supply, open, reset]);
 
   async function onSubmit(data: SupplyFormData): Promise<void> {
     try {

@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactElement } from 'react';
+import { Fragment, type ReactElement } from 'react';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -78,9 +78,8 @@ export function SupplyTypeGroup({
                 </TableRow>
               ) : (
                 supplies.map((supply) => (
-                  <>
+                  <Fragment key={supply.id}>
                     <TableRow
-                      key={supply.id}
                       className={`cursor-pointer ${
                         !supply.isActive ? 'opacity-50' : ''
                       } ${expandedId === supply.id ? 'bg-muted/30' : ''}`}
@@ -115,7 +114,7 @@ export function SupplyTypeGroup({
                         colSpan={colSpan}
                       />
                     )}
-                  </>
+                  </Fragment>
                 ))
               )}
             </TableBody>
