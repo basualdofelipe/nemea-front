@@ -22,6 +22,9 @@ export interface Product {
   currentPrice: number | null;
   lastPriceUpdate: string | null;
   createdAt: string;
+  cost: number | null;
+  costBreakdown: CostBreakdownItem[] | null;
+  costWarnings: string[];
 }
 
 export interface BomItem {
@@ -35,6 +38,17 @@ export interface BomItem {
   };
   quantity: string;
   isActive: boolean;
+}
+
+export interface CostBreakdownItem {
+  supplyId: string;
+  supplyName: string;
+  supplyType: string;
+  quantity: number;
+  unitType: string;
+  unitPrice: number | null;
+  lineCost: number | null;
+  isSupplyActive: boolean;
 }
 
 export interface PriceRecord {
@@ -57,4 +71,22 @@ export function getProductDisplayName(product: Product): string {
 export function formatSellingPrice(price: number | null): string {
   if (price === null) return '\u2014';
   return `$${price.toLocaleString('es-AR')}`;
+}
+
+export function formatCost(cost: number | null): string {
+  if (cost === null) return '\u2014';
+  return `$${cost.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+}
+
+export function formatMargin(
+  cost: number | null,
+  price: number | null,
+): { amount: string; percent: string } {
+  if (cost === null || price === null) {
+    return { amount: '\u2014', percent: '\u2014' };
+  }
+  const margin = price - cost;
+  const amount = `$${margin.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+  const percent = cost > 0 ? `${Math.round((margin / cost) * 100)}%` : '\u2014';
+  return { amount, percent };
 }
