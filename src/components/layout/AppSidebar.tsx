@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, Truck, Package } from 'lucide-react';
+import { Home, BookOpen, Truck, Package, ShoppingBag } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -28,6 +28,7 @@ const DATOS_BASE_ITEMS: NavItem[] = [
   { label: 'Catalogos', href: '/catalogos', icon: BookOpen },
   { label: 'Proveedores', href: '/proveedores', icon: Truck },
   { label: 'Insumos', href: '/insumos', icon: Package },
+  { label: 'Productos', href: '/productos', icon: ShoppingBag },
 ];
 
 export function AppSidebar(): ReactElement {
