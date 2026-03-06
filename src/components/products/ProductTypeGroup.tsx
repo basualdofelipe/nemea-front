@@ -66,41 +66,53 @@ export function ProductTypeGroup({
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger className='hover:bg-muted/50 flex w-full items-center gap-2 rounded-md px-3 py-2 text-left transition-colors'>
-        <ChevronDown
-          className={`size-4 shrink-0 transition-transform duration-200 ${
-            isOpen ? '' : '-rotate-90'
-          }`}
-        />
-        <span className='font-medium'>{typeName}</span>
-        <Badge variant='secondary' className='ml-1'>
-          {products.length} {products.length === 1 ? 'producto' : 'productos'}
-        </Badge>
-        {isAdmin && (
-          <div
-            className='ml-auto flex items-center gap-1'
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Button
-              size='sm'
-              variant='ghost'
-              className='h-7 text-xs'
-              onClick={() => setShowGroupBomEditor(true)}
+      <CollapsibleTrigger asChild>
+        <div
+          role='button'
+          tabIndex={0}
+          className='hover:bg-muted/50 flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left transition-colors'
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setIsOpen(!isOpen);
+            }
+          }}
+        >
+          <ChevronDown
+            className={`size-4 shrink-0 transition-transform duration-200 ${
+              isOpen ? '' : '-rotate-90'
+            }`}
+          />
+          <span className='font-medium'>{typeName}</span>
+          <Badge variant='secondary' className='ml-1'>
+            {products.length} {products.length === 1 ? 'producto' : 'productos'}
+          </Badge>
+          {isAdmin && (
+            <div
+              className='ml-auto flex items-center gap-1'
+              onClick={(e) => e.stopPropagation()}
             >
-              <ClipboardList className='mr-1 size-3' />
-              Editar BOM grupal
-            </Button>
-            <Button
-              size='sm'
-              variant='ghost'
-              className='h-7 text-xs'
-              onClick={() => setShowBatchPrice(true)}
-            >
-              <DollarSign className='mr-1 size-3' />
-              Precio grupal
-            </Button>
-          </div>
-        )}
+              <Button
+                size='sm'
+                variant='ghost'
+                className='h-7 text-xs'
+                onClick={() => setShowGroupBomEditor(true)}
+              >
+                <ClipboardList className='mr-1 size-3' />
+                Editar BOM grupal
+              </Button>
+              <Button
+                size='sm'
+                variant='ghost'
+                className='h-7 text-xs'
+                onClick={() => setShowBatchPrice(true)}
+              >
+                <DollarSign className='mr-1 size-3' />
+                Precio grupal
+              </Button>
+            </div>
+          )}
+        </div>
       </CollapsibleTrigger>
 
       <CollapsibleContent>
