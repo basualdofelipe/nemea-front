@@ -25,6 +25,7 @@ import {
 import { apiClientFetch } from '@/lib/api-client';
 import type { BomItem, CatalogItem, Product } from './types';
 import { formatSellingPrice, getProductDisplayName } from './types';
+import { BomEditorDialog } from './BomEditorDialog';
 import { ProductEditDialog } from './ProductEditDialog';
 
 const UNIT_LABELS: Record<string, string> = {
@@ -56,6 +57,7 @@ interface ProductExpandedRowProps {
 
 export function ProductExpandedRow({
   product,
+  supplies,
   types,
   names,
   finishes,
@@ -71,6 +73,7 @@ export function ProductExpandedRow({
   const [bomItems, setBomItems] = useState<BomItem[]>([]);
   const [bomLoading, setBomLoading] = useState(true);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showBomEditor, setShowBomEditor] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
 
   const fetchBom = useCallback(async (): Promise<void> => {
@@ -226,9 +229,7 @@ export function ProductExpandedRow({
                 <Button
                   size='sm'
                   variant='outline'
-                  onClick={() =>
-                    toast.info('Editar BOM se implementa en el plan 05-04')
-                  }
+                  onClick={() => setShowBomEditor(true)}
                 >
                   <ClipboardList className='mr-1 size-3' />
                   Editar BOM
@@ -280,6 +281,19 @@ export function ProductExpandedRow({
         finishes={finishes}
         colors={colors}
         sizes={sizes}
+      />
+
+      <BomEditorDialog
+        productId={product.id}
+        productName={getProductDisplayName(product)}
+        supplies={supplies}
+        currentBom={bomItems}
+        open={showBomEditor}
+        onOpenChange={setShowBomEditor}
+        onSuccess={() => {
+          void fetchBom();
+          router.refresh();
+        }}
       />
     </>
   );

@@ -2,7 +2,9 @@
 
 import { Fragment, type ReactElement } from 'react';
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ChevronDown, ClipboardList } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Collapsible,
@@ -19,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import type { CatalogItem, Product } from './types';
 import { formatSellingPrice } from './types';
+import { BomGroupEditorDialog } from './BomGroupEditorDialog';
 import { ProductExpandedRow } from './ProductExpandedRow';
 
 interface SupplyOption {
@@ -52,8 +55,10 @@ export function ProductTypeGroup({
   sizes,
   isAdmin,
 }: ProductTypeGroupProps): ReactElement {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showGroupBomEditor, setShowGroupBomEditor] = useState(false);
 
   const colSpan = 6;
 
@@ -69,6 +74,22 @@ export function ProductTypeGroup({
         <Badge variant='secondary' className='ml-1'>
           {products.length} {products.length === 1 ? 'producto' : 'productos'}
         </Badge>
+        {isAdmin && (
+          <div
+            className='ml-auto flex items-center gap-1'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Button
+              size='sm'
+              variant='ghost'
+              className='h-7 text-xs'
+              onClick={() => setShowGroupBomEditor(true)}
+            >
+              <ClipboardList className='mr-1 size-3' />
+              Editar BOM grupal
+            </Button>
+          </div>
+        )}
       </CollapsibleTrigger>
 
       <CollapsibleContent>
@@ -145,6 +166,14 @@ export function ProductTypeGroup({
           </Table>
         </div>
       </CollapsibleContent>
+
+      <BomGroupEditorDialog
+        products={products}
+        supplies={supplies}
+        open={showGroupBomEditor}
+        onOpenChange={setShowGroupBomEditor}
+        onSuccess={() => router.refresh()}
+      />
     </Collapsible>
   );
 }
