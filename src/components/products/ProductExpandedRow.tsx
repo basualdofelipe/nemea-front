@@ -23,8 +23,19 @@ import {
   TableHeader,
 } from '@/components/ui/table';
 import { apiClientFetch } from '@/lib/api-client';
-import type { BomItem, CatalogItem, Product } from './types';
-import { formatSellingPrice, getProductDisplayName } from './types';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import type { BomItem, CatalogItem, CostBreakdownItem, Product } from './types';
+import {
+  formatCost,
+  formatMargin,
+  formatSellingPrice,
+  getProductDisplayName,
+} from './types';
 import { AddSellingPriceInline } from './AddSellingPriceInline';
 import { BomEditorDialog } from './BomEditorDialog';
 import { PriceHistoryDialog } from './PriceHistoryDialog';
@@ -73,6 +84,7 @@ export function ProductExpandedRow({
   const token = session?.accessToken ?? '';
 
   const [bomItems, setBomItems] = useState<BomItem[]>([]);
+  const [costBreakdown, setCostBreakdown] = useState<CostBreakdownItem[]>([]);
   const [bomLoading, setBomLoading] = useState(true);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showBomEditor, setShowBomEditor] = useState(false);
@@ -84,11 +96,17 @@ export function ProductExpandedRow({
     if (!token) return;
     setBomLoading(true);
     try {
-      const res = await apiClientFetch<{ data: BomItem[] }>(
-        `/api/products/${product.id}/bom`,
-        token,
-      );
-      setBomItems(res.data);
+      const [bomRes, productRes] = await Promise.all([
+        apiClientFetch<{ data: BomItem[] }>(
+          `/api/products/${product.id}/bom`,
+          token,
+        ),
+        apiClientFetch<{
+          data: Product & { costBreakdown: CostBreakdownItem[] | null };
+        }>(`/api/products/${product.id}`, token),
+      ]);
+      setBomItems(bomRes.data);
+      setCostBreakdown(productRes.data.costBreakdown ?? []);
     } catch {
       toast.error('Error al cargar materiales');
     } finally {
@@ -184,39 +202,126 @@ export function ProductExpandedRow({
                   Sin materiales definidos
                 </p>
               ) : (
-                <div className='rounded-md border'>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Insumo</TableHead>
-                        <TableHead>Tipo</TableHead>
-                        <TableHead>Cantidad</TableHead>
-                        <TableHead>Unidad</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {bomItems.map((item) => (
-                        <TableRow
-                          key={item.id}
-                          className={!item.supply.isActive ? 'opacity-50' : ''}
-                        >
-                          <TableCell className='flex items-center gap-1'>
-                            {item.supply.name}
-                            {!item.supply.isActive && (
-                              <AlertTriangle className='text-destructive size-3' />
+                (() => {
+                  const costMap = new Map(
+                    costBreakdown.map((cb) => [cb.supplyId, cb]),
+                  );
+                  const totalCost = costBreakdown.reduce(
+                    (sum, cb) => sum + (cb.lineCost ?? 0),
+                    0,
+                  );
+                  const margin = formatMargin(
+                    product.cost,
+                    product.currentPrice,
+                  );
+
+                  return (
+                    <>
+                      <div className='rounded-md border'>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Insumo</TableHead>
+                              <TableHead>Tipo</TableHead>
+                              <TableHead>Cantidad</TableHead>
+                              <TableHead>Unidad</TableHead>
+                              <TableHead>Precio Unit.</TableHead>
+                              <TableHead>Costo Linea</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {bomItems.map((item) => {
+                              const cb = costMap.get(item.supply.id);
+                              return (
+                                <TableRow
+                                  key={item.id}
+                                  className={
+                                    !item.supply.isActive ? 'opacity-50' : ''
+                                  }
+                                >
+                                  <TableCell className='flex items-center gap-1'>
+                                    {item.supply.name}
+                                    {!item.supply.isActive && (
+                                      <AlertTriangle className='text-destructive size-3' />
+                                    )}
+                                  </TableCell>
+                                  <TableCell>{item.supply.type.name}</TableCell>
+                                  <TableCell>{item.quantity}</TableCell>
+                                  <TableCell>
+                                    {UNIT_LABELS[item.supply.unitType] ??
+                                      item.supply.unitType}
+                                  </TableCell>
+                                  <TableCell>
+                                    {cb?.unitPrice != null ? (
+                                      formatCost(cb.unitPrice)
+                                    ) : (
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <span className='flex items-center gap-1'>
+                                              {'\u2014'}
+                                              <AlertTriangle className='size-3 text-amber-500' />
+                                            </span>
+                                          </TooltipTrigger>
+                                          <TooltipContent>
+                                            Sin precio registrado
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {cb?.lineCost != null
+                                      ? formatCost(cb.lineCost)
+                                      : '\u2014'}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                            {bomItems.length > 0 && (
+                              <TableRow className='font-medium'>
+                                <TableCell colSpan={5} className='text-right'>
+                                  Total
+                                </TableCell>
+                                <TableCell>
+                                  {formatCost(
+                                    totalCost > 0 ? totalCost : product.cost,
+                                  )}
+                                </TableCell>
+                              </TableRow>
                             )}
-                          </TableCell>
-                          <TableCell>{item.supply.type.name}</TableCell>
-                          <TableCell>{item.quantity}</TableCell>
-                          <TableCell>
-                            {UNIT_LABELS[item.supply.unitType] ??
-                              item.supply.unitType}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      <div className='text-muted-foreground flex flex-wrap gap-4 text-sm'>
+                        <span>
+                          Costo total:{' '}
+                          <span className='text-foreground font-medium'>
+                            {formatCost(product.cost)}
+                          </span>
+                        </span>
+                        <span>
+                          Precio venta:{' '}
+                          <span className='text-foreground font-medium'>
+                            {formatSellingPrice(product.currentPrice)}
+                          </span>
+                        </span>
+                        <span>
+                          Margen:{' '}
+                          <span className='text-foreground font-medium'>
+                            {margin.amount}
+                            {margin.percent !== '\u2014' && (
+                              <span className='text-muted-foreground ml-1'>
+                                ({margin.percent})
+                              </span>
+                            )}
+                          </span>
+                        </span>
+                      </div>
+                    </>
+                  );
+                })()
               )}
             </div>
 

@@ -1,9 +1,15 @@
 'use client';
 
 import { Fragment, type ReactElement } from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ClipboardList, DollarSign } from 'lucide-react';
+import {
+  AlertTriangle,
+  ChevronDown,
+  ClipboardList,
+  DollarSign,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -19,8 +25,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import type { CatalogItem, Product } from './types';
-import { formatSellingPrice } from './types';
+import { formatCost, formatMargin, formatSellingPrice } from './types';
 import { BatchPriceDialog } from './BatchPriceDialog';
 import { BomGroupEditorDialog } from './BomGroupEditorDialog';
 import { ProductExpandedRow } from './ProductExpandedRow';
@@ -62,7 +74,14 @@ export function ProductTypeGroup({
   const [showGroupBomEditor, setShowGroupBomEditor] = useState(false);
   const [showBatchPrice, setShowBatchPrice] = useState(false);
 
-  const colSpan = 6;
+  const colSpan = 8;
+
+  const avgCost = useMemo((): number | null => {
+    const withCost = products.filter((p) => p.cost !== null);
+    if (withCost.length === 0) return null;
+    const total = withCost.reduce((sum, p) => sum + (p.cost as number), 0);
+    return total / withCost.length;
+  }, [products]);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -87,6 +106,11 @@ export function ProductTypeGroup({
           <Badge variant='secondary' className='ml-1'>
             {products.length} {products.length === 1 ? 'producto' : 'productos'}
           </Badge>
+          {avgCost !== null && (
+            <Badge variant='outline' className='ml-1'>
+              Costo prom: {formatCost(avgCost)}
+            </Badge>
+          )}
           {isAdmin && (
             <div
               className='ml-auto flex items-center gap-1'
@@ -125,7 +149,9 @@ export function ProductTypeGroup({
                 <TableHead>Terminacion</TableHead>
                 <TableHead>Color</TableHead>
                 <TableHead>Talle</TableHead>
+                <TableHead>Costo</TableHead>
                 <TableHead>Precio Venta</TableHead>
+                <TableHead>Margen</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -155,7 +181,13 @@ export function ProductTypeGroup({
                         {product.skuCode}
                       </TableCell>
                       <TableCell className='font-medium'>
-                        {product.name.name}
+                        <Link
+                          href={`/productos/${product.id}`}
+                          className='text-primary hover:underline'
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {product.name.name}
+                        </Link>
                       </TableCell>
                       <TableCell>{product.finish.name}</TableCell>
                       <TableCell>{product.color.name}</TableCell>
@@ -165,7 +197,58 @@ export function ProductTypeGroup({
                           : product.size.name}
                       </TableCell>
                       <TableCell>
+                        {product.cost === null &&
+                        product.costWarnings.length === 0 ? (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span>{formatCost(product.cost)}</span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Sin materiales definidos
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        ) : (
+                          <span className='flex items-center gap-1'>
+                            {formatCost(product.cost)}
+                            {product.costWarnings.length > 0 && (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <AlertTriangle className='size-3.5 text-amber-500' />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {product.costWarnings.map((w, i) => (
+                                      <p key={i}>{w}</p>
+                                    ))}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            )}
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell>
                         {formatSellingPrice(product.currentPrice)}
+                      </TableCell>
+                      <TableCell>
+                        {(() => {
+                          const margin = formatMargin(
+                            product.cost,
+                            product.currentPrice,
+                          );
+                          return (
+                            <span>
+                              {margin.amount}
+                              {margin.percent !== '\u2014' && (
+                                <span className='text-muted-foreground ml-1 text-xs'>
+                                  ({margin.percent})
+                                </span>
+                              )}
+                            </span>
+                          );
+                        })()}
                       </TableCell>
                     </TableRow>
                     {expandedId === product.id && (
