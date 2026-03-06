@@ -25,7 +25,9 @@ import {
 import { apiClientFetch } from '@/lib/api-client';
 import type { BomItem, CatalogItem, Product } from './types';
 import { formatSellingPrice, getProductDisplayName } from './types';
+import { AddSellingPriceInline } from './AddSellingPriceInline';
 import { BomEditorDialog } from './BomEditorDialog';
+import { PriceHistoryDialog } from './PriceHistoryDialog';
 import { ProductEditDialog } from './ProductEditDialog';
 
 const UNIT_LABELS: Record<string, string> = {
@@ -74,6 +76,8 @@ export function ProductExpandedRow({
   const [bomLoading, setBomLoading] = useState(true);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showBomEditor, setShowBomEditor] = useState(false);
+  const [showPriceInline, setShowPriceInline] = useState(false);
+  const [showPriceHistory, setShowPriceHistory] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
 
   const fetchBom = useCallback(async (): Promise<void> => {
@@ -217,56 +221,61 @@ export function ProductExpandedRow({
             </div>
 
             {isAdmin && (
-              <div className='flex flex-wrap items-center gap-2 border-t pt-3'>
-                <Button
-                  size='sm'
-                  variant='outline'
-                  onClick={() => setShowEditDialog(true)}
-                >
-                  <Pencil className='mr-1 size-3' />
-                  Editar
-                </Button>
-                <Button
-                  size='sm'
-                  variant='outline'
-                  onClick={() => setShowBomEditor(true)}
-                >
-                  <ClipboardList className='mr-1 size-3' />
-                  Editar BOM
-                </Button>
-                <Button
-                  size='sm'
-                  variant='outline'
-                  onClick={() =>
-                    toast.info('Precio de venta se implementa en el plan 05-04')
-                  }
-                >
-                  <DollarSign className='mr-1 size-3' />
-                  Precio venta
-                </Button>
-                <Button
-                  size='sm'
-                  variant='outline'
-                  onClick={() =>
-                    toast.info(
-                      'Historial de precios se implementa en el plan 05-04',
-                    )
-                  }
-                >
-                  <History className='mr-1 size-3' />
-                  Historial precios
-                </Button>
-                <div className='ml-auto flex items-center gap-2'>
-                  <Badge variant={product.isActive ? 'default' : 'destructive'}>
-                    {product.isActive ? 'Activo' : 'Inactivo'}
-                  </Badge>
-                  <Switch
-                    checked={product.isActive}
-                    onCheckedChange={() => void handleToggleStatus()}
-                    disabled={isToggling}
-                  />
+              <>
+                <div className='flex flex-wrap items-center gap-2 border-t pt-3'>
+                  <Button
+                    size='sm'
+                    variant='outline'
+                    onClick={() => setShowEditDialog(true)}
+                  >
+                    <Pencil className='mr-1 size-3' />
+                    Editar
+                  </Button>
+                  <Button
+                    size='sm'
+                    variant='outline'
+                    onClick={() => setShowBomEditor(true)}
+                  >
+                    <ClipboardList className='mr-1 size-3' />
+                    Editar BOM
+                  </Button>
+                  <Button
+                    size='sm'
+                    variant='outline'
+                    onClick={() => setShowPriceInline((prev) => !prev)}
+                  >
+                    <DollarSign className='mr-1 size-3' />
+                    Precio venta
+                  </Button>
+                  <Button
+                    size='sm'
+                    variant='outline'
+                    onClick={() => setShowPriceHistory(true)}
+                  >
+                    <History className='mr-1 size-3' />
+                    Historial precios
+                  </Button>
+                  <div className='ml-auto flex items-center gap-2'>
+                    <Badge
+                      variant={product.isActive ? 'default' : 'destructive'}
+                    >
+                      {product.isActive ? 'Activo' : 'Inactivo'}
+                    </Badge>
+                    <Switch
+                      checked={product.isActive}
+                      onCheckedChange={() => void handleToggleStatus()}
+                      disabled={isToggling}
+                    />
+                  </div>
                 </div>
-              </div>
+
+                {showPriceInline && (
+                  <AddSellingPriceInline
+                    productId={product.id}
+                    onClose={() => setShowPriceInline(false)}
+                  />
+                )}
+              </>
             )}
           </div>
         </TableCell>
@@ -294,6 +303,13 @@ export function ProductExpandedRow({
           void fetchBom();
           router.refresh();
         }}
+      />
+
+      <PriceHistoryDialog
+        productId={product.id}
+        productName={getProductDisplayName(product)}
+        open={showPriceHistory}
+        onOpenChange={setShowPriceHistory}
       />
     </>
   );

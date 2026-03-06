@@ -3,7 +3,7 @@
 import { Fragment, type ReactElement } from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ClipboardList } from 'lucide-react';
+import { ChevronDown, ClipboardList, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import type { CatalogItem, Product } from './types';
 import { formatSellingPrice } from './types';
+import { BatchPriceDialog } from './BatchPriceDialog';
 import { BomGroupEditorDialog } from './BomGroupEditorDialog';
 import { ProductExpandedRow } from './ProductExpandedRow';
 
@@ -59,6 +60,7 @@ export function ProductTypeGroup({
   const [isOpen, setIsOpen] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showGroupBomEditor, setShowGroupBomEditor] = useState(false);
+  const [showBatchPrice, setShowBatchPrice] = useState(false);
 
   const colSpan = 6;
 
@@ -87,6 +89,15 @@ export function ProductTypeGroup({
             >
               <ClipboardList className='mr-1 size-3' />
               Editar BOM grupal
+            </Button>
+            <Button
+              size='sm'
+              variant='ghost'
+              className='h-7 text-xs'
+              onClick={() => setShowBatchPrice(true)}
+            >
+              <DollarSign className='mr-1 size-3' />
+              Precio grupal
             </Button>
           </div>
         )}
@@ -172,6 +183,13 @@ export function ProductTypeGroup({
         supplies={supplies}
         open={showGroupBomEditor}
         onOpenChange={setShowGroupBomEditor}
+        onSuccess={() => router.refresh()}
+      />
+
+      <BatchPriceDialog
+        products={products}
+        open={showBatchPrice}
+        onOpenChange={setShowBatchPrice}
         onSuccess={() => router.refresh()}
       />
     </Collapsible>
