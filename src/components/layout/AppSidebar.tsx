@@ -3,7 +3,14 @@
 import type { ReactElement } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, Truck, Package, ShoppingBag } from 'lucide-react';
+import {
+  Home,
+  BookOpen,
+  Truck,
+  Package,
+  ShoppingBag,
+  Receipt,
+} from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -24,11 +31,18 @@ interface NavItem {
 
 const TOP_ITEMS: NavItem[] = [{ label: 'Inicio', href: '/', icon: Home }];
 
+const FINANZAS_ITEMS: NavItem[] = [
+  { label: 'Gastos', href: '/finanzas/gastos', icon: Receipt },
+];
+
+const PRODUCTOS_ITEMS: NavItem[] = [
+  { label: 'Productos', href: '/productos', icon: ShoppingBag },
+];
+
 const DATOS_BASE_ITEMS: NavItem[] = [
   { label: 'Catalogos', href: '/catalogos', icon: BookOpen },
   { label: 'Proveedores', href: '/proveedores', icon: Truck },
   { label: 'Insumos', href: '/insumos', icon: Package },
-  { label: 'Productos', href: '/productos', icon: ShoppingBag },
 ];
 
 export function AppSidebar(): ReactElement {
@@ -74,6 +88,17 @@ export function AppSidebar(): ReactElement {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>{renderNavItems(TOP_ITEMS)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Finanzas</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(FINANZAS_ITEMS)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(PRODUCTOS_ITEMS)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>

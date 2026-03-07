@@ -20,6 +20,7 @@ const DIMENSIONS = [
   { key: 'product-colors', label: 'Colores' },
   { key: 'product-sizes', label: 'Talles' },
   { key: 'supply-types', label: 'Tipos de Insumo' },
+  { key: 'expense-categories', label: 'Categorias de Gasto' },
 ];
 
 export default async function CatalogosPage(): Promise<ReactElement> {
