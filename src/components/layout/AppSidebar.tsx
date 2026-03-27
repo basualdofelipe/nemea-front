@@ -11,6 +11,7 @@ import {
   Package,
   ShoppingBag,
   Receipt,
+  Calculator,
   Users,
   Settings,
 } from 'lucide-react';
@@ -36,6 +37,10 @@ const TOP_ITEMS: NavItem[] = [{ label: 'Inicio', href: '/', icon: Home }];
 
 const FINANZAS_ITEMS: NavItem[] = [
   { label: 'Gastos', href: '/finanzas/gastos', icon: Receipt },
+];
+
+const HERRAMIENTAS_ITEMS: NavItem[] = [
+  { label: 'Calculadora', href: '/calculadora', icon: Calculator },
 ];
 
 const PRODUCTOS_ITEMS: NavItem[] = [
@@ -108,6 +113,12 @@ export function AppSidebar(): ReactElement {
           <SidebarGroupLabel>Finanzas</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>{renderNavItems(FINANZAS_ITEMS)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Herramientas</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(HERRAMIENTAS_ITEMS)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
