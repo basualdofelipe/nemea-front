@@ -12,6 +12,7 @@ import {
   ShoppingBag,
   Receipt,
   Users,
+  Settings,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -49,6 +50,11 @@ const DATOS_BASE_ITEMS: NavItem[] = [
 
 const ADMIN_ITEMS: NavItem[] = [
   { label: 'Usuarios', href: '/usuarios', icon: Users },
+  {
+    label: 'Config Tiendanube',
+    href: '/configuracion/tiendanube',
+    icon: Settings,
+  },
 ];
 
 export function AppSidebar(): ReactElement {
