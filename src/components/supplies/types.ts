@@ -27,12 +27,9 @@ export interface PriceRecord {
   createdAt: string;
 }
 
-export const UNIT_LABELS: Record<Supply['unitType'], string> = {
-  m2: 'm\u00B2',
-  unidad: 'un.',
-  metro: 'm',
-  kg: 'kg',
-};
+import { UNIT_LABELS } from '@/types/supply';
+
+export { UNIT_LABELS };
 
 export function formatPrice(
   price: number | null,

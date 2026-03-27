@@ -46,25 +46,12 @@ import {
   formatSellingPrice,
   getProductDisplayName,
 } from './types';
+import type { SupplyOption } from '@/types/supply';
+import { UNIT_LABELS } from '@/types/supply';
 import { AddSellingPriceInline } from './AddSellingPriceInline';
 import { BomEditorDialog } from './BomEditorDialog';
 import { PriceHistoryDialog } from './PriceHistoryDialog';
 import { ProductEditDialog } from './ProductEditDialog';
-
-const UNIT_LABELS: Record<string, string> = {
-  m2: 'm\u00B2',
-  unidad: 'un.',
-  metro: 'm',
-  kg: 'kg',
-};
-
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
-}
 
 interface ProductDetailClientProps {
   product: Product & { costBreakdown: CostBreakdownItem[] | null };

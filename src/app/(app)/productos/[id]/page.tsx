@@ -8,6 +8,7 @@ import type {
   Product,
 } from '@/components/products/types';
 import { ProductDetailClient } from '@/components/products/ProductDetailClient';
+import type { SupplyOption } from '@/types/supply';
 
 interface ProductWithCostResponse extends Product {
   costBreakdown: Array<{
@@ -20,14 +21,6 @@ interface ProductWithCostResponse extends Product {
     lineCost: number | null;
     isSupplyActive: boolean;
   }> | null;
-}
-
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
 }
 
 export default async function ProductDetailPage({

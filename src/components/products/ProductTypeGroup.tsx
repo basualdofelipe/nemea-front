@@ -36,14 +36,7 @@ import { formatCost, formatMargin, formatSellingPrice } from './types';
 import { BatchPriceDialog } from './BatchPriceDialog';
 import { BomGroupEditorDialog } from './BomGroupEditorDialog';
 import { ProductExpandedRow } from './ProductExpandedRow';
-
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
-}
+import type { SupplyOption } from '@/types/supply';
 
 interface ProductTypeGroupProps {
   typeName: string;

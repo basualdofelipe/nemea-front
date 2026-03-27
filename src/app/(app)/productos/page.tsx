@@ -3,14 +3,7 @@ import { auth } from '@/auth';
 import { apiFetch } from '@/lib/api';
 import { ProductTable } from '@/components/products/ProductTable';
 import type { CatalogItem, Product } from '@/components/products/types';
-
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
-}
+import type { SupplyOption } from '@/types/supply';
 
 export default async function ProductosPage(): Promise<ReactElement> {
   const session = await auth();

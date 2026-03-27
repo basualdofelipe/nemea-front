@@ -3,17 +3,9 @@
 import type { ReactElement } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { ChevronsUpDown, Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
 import {
   Dialog,
   DialogContent,
@@ -22,29 +14,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { apiClientFetch } from '@/lib/api-client';
+import type { SupplyOption } from '@/types/supply';
+import { UNIT_LABELS } from '@/types/supply';
+import { SupplyCombobox } from './SupplyCombobox';
 import type { BomItem } from './types';
-
-const UNIT_LABELS: Record<string, string> = {
-  m2: 'm\u00B2',
-  unidad: 'un.',
-  metro: 'm',
-  kg: 'kg',
-};
-
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
-  supplier?: { name: string };
-}
 
 interface BomRow {
   supplyId: string;
@@ -59,78 +33,6 @@ interface BomEditorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
-}
-
-function SupplyCombobox({
-  supplies,
-  value,
-  onChange,
-}: {
-  supplies: SupplyOption[];
-  value: string;
-  onChange: (supplyId: string) => void;
-}): ReactElement {
-  const [open, setOpen] = useState(false);
-
-  const grouped = supplies.reduce<Record<string, SupplyOption[]>>(
-    (acc, supply) => {
-      const typeName = supply.type.name;
-      if (!acc[typeName]) acc[typeName] = [];
-      acc[typeName].push(supply);
-      return acc;
-    },
-    {},
-  );
-
-  const selected = supplies.find((s) => s.id === value);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant='outline'
-          role='combobox'
-          aria-expanded={open}
-          className='w-full justify-between'
-          size='sm'
-        >
-          <span className='truncate'>
-            {selected ? selected.name : 'Seleccionar insumo...'}
-          </span>
-          <ChevronsUpDown className='ml-1 size-3 shrink-0 opacity-50' />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className='w-80 p-0' align='start'>
-        <Command>
-          <CommandInput placeholder='Buscar insumo...' />
-          <CommandList>
-            <CommandEmpty>No se encontraron insumos.</CommandEmpty>
-            {Object.entries(grouped).map(([typeName, typeSupplies]) => (
-              <CommandGroup key={typeName} heading={typeName}>
-                {typeSupplies.map((supply) => (
-                  <CommandItem
-                    key={supply.id}
-                    value={`${supply.name} ${supply.supplier?.name ?? ''}`}
-                    onSelect={() => {
-                      onChange(supply.id);
-                      setOpen(false);
-                    }}
-                  >
-                    <span className='truncate'>{supply.name}</span>
-                    {supply.supplier?.name && (
-                      <span className='text-muted-foreground ml-auto text-xs'>
-                        {supply.supplier.name}
-                      </span>
-                    )}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            ))}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
 }
 
 export function BomEditorDialog({

@@ -12,14 +12,7 @@ import type { CatalogItem, Product } from './types';
 import { getProductDisplayName } from './types';
 import { ProductTypeGroup } from './ProductTypeGroup';
 import { ProductBatchCreateDialog } from './ProductBatchCreateDialog';
-
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
-}
+import type { SupplyOption } from '@/types/supply';
 
 interface ProductTableProps {
   initialProducts: Product[];
