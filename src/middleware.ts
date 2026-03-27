@@ -7,6 +7,7 @@ const ADMIN_ONLY_ROUTES = [
   '/productos',
   '/finanzas',
   '/usuarios',
+  '/configuracion',
 ];
 
 function isAdminOnlyRoute(pathname: string): boolean {
