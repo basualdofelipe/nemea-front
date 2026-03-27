@@ -3,6 +3,7 @@
 import type { ReactElement } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import {
   Home,
   BookOpen,
@@ -10,6 +11,7 @@ import {
   Package,
   ShoppingBag,
   Receipt,
+  Users,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -45,8 +47,14 @@ const DATOS_BASE_ITEMS: NavItem[] = [
   { label: 'Insumos', href: '/insumos', icon: Package },
 ];
 
+const ADMIN_ITEMS: NavItem[] = [
+  { label: 'Usuarios', href: '/usuarios', icon: Users },
+];
+
 export function AppSidebar(): ReactElement {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'admin';
 
   function isActive(href: string): boolean {
     if (href === '/') {
@@ -107,6 +115,14 @@ export function AppSidebar(): ReactElement {
             <SidebarMenu>{renderNavItems(DATOS_BASE_ITEMS)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        {isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Admin</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>{renderNavItems(ADMIN_ITEMS)}</SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
     </Sidebar>
   );
