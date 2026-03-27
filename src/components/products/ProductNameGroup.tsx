@@ -56,6 +56,7 @@ export function ProductNameGroup({
   const [isOpen, setIsOpen] = useState(true);
   const [showGroupBomEditor, setShowGroupBomEditor] = useState(false);
   const [showBatchPrice, setShowBatchPrice] = useState(false);
+  const [hasDivergence, setHasDivergence] = useState(false);
 
   const avgCost = useMemo((): number | null => {
     const withCost = products.filter((p) => p.cost !== null);
@@ -96,7 +97,7 @@ export function ProductNameGroup({
     return false;
   }, [products]);
 
-  const showDivergenceBadge = costBasedDivergence;
+  const showDivergenceBadge = hasDivergence || costBasedDivergence;
 
   // Sub-group by finish, sorted alphabetically
   const finishGroups = useMemo((): {
@@ -119,6 +120,10 @@ export function ProductNameGroup({
       }))
       .sort((a, b) => a.finishName.localeCompare(b.finishName));
   }, [products]);
+
+  function handleDivergenceDetected(hasDivergent: boolean): void {
+    setHasDivergence(hasDivergent);
+  }
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -221,6 +226,8 @@ export function ProductNameGroup({
         open={showGroupBomEditor}
         onOpenChange={setShowGroupBomEditor}
         onSuccess={() => router.refresh()}
+        groupName={productName}
+        onDivergenceDetected={handleDivergenceDetected}
       />
 
       <BatchPriceDialog

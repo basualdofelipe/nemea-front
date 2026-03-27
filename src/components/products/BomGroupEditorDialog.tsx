@@ -33,6 +33,8 @@ interface BomGroupEditorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
+  groupName?: string;
+  onDivergenceDetected?: (hasDivergent: boolean) => void;
 }
 
 function serializeBom(items: { supplyId: string; quantity: string }[]): string {
@@ -48,6 +50,8 @@ export function BomGroupEditorDialog({
   open,
   onOpenChange,
   onSuccess,
+  groupName,
+  onDivergenceDetected,
 }: BomGroupEditorDialogProps): ReactElement {
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
@@ -105,6 +109,7 @@ export function BomGroupEditorDialog({
         }
       }
       setDivergentIds(divergent);
+      onDivergenceDetected?.(divergent.size > 0);
 
       // Pre-populate rows with majority BOM
       const majorityItems = JSON.parse(majorityBom) as {
@@ -125,7 +130,7 @@ export function BomGroupEditorDialog({
     } finally {
       setIsLoading(false);
     }
-  }, [token, products]);
+  }, [token, products, onDivergenceDetected]);
 
   useEffect(() => {
     if (open) {
@@ -210,7 +215,11 @@ export function BomGroupEditorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-h-[85vh] overflow-y-auto sm:max-w-2xl'>
         <DialogHeader>
-          <DialogTitle>Editar BOM grupal</DialogTitle>
+          <DialogTitle>
+            {groupName
+              ? `Editar BOM grupal \u2014 ${groupName}`
+              : 'Editar BOM grupal'}
+          </DialogTitle>
         </DialogHeader>
 
         {isLoading ? (
