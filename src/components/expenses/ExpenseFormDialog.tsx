@@ -67,6 +67,7 @@ export function ExpenseFormDialog({
     register,
     handleSubmit,
     setValue,
+    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<ExpenseFormData>({
@@ -202,7 +203,7 @@ export function ExpenseFormDialog({
                 Categoria <span className='text-destructive'>*</span>
               </Label>
               <Select
-                value={isEdit ? expense.category.id : undefined}
+                value={watch('categoryId') || undefined}
                 onValueChange={(value) =>
                   setValue('categoryId', value, { shouldValidate: true })
                 }

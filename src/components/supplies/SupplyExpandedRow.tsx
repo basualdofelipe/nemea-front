@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { apiClientFetch } from '@/lib/api-client';
+import { formatDate } from '@/lib/formatters';
 import type { Supply, SupplyType, Supplier } from './types';
 import { formatPrice } from './types';
 import { AddPriceInline } from './AddPriceInline';
@@ -56,15 +57,6 @@ export function SupplyExpandedRow({
     } finally {
       setIsToggling(false);
     }
-  }
-
-  function formatDate(iso: string | null): string {
-    if (!iso) return '-';
-    return new Date(iso).toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
   }
 
   return (
