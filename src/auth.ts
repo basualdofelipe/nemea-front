@@ -47,7 +47,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
         } catch {
           // Backend unreachable — token won't have backendToken
-          // proxy.ts will redirect to /acceso-denegado on next navigation
+          // middleware.ts will redirect to /acceso-denegado on next navigation
         }
       }
       return token;
