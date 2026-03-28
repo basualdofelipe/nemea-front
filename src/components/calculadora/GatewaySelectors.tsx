@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactElement } from 'react';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Select,
   SelectContent,
@@ -65,6 +65,12 @@ export function GatewaySelectors({
   const [showPlanOverride, setShowPlanOverride] = useState<boolean>(false);
   const [planSlug, setPlanSlug] = useState<string>(DEFAULT_PLAN_SLUG);
 
+  // Ref to hold latest onConfigChange — avoids it being a useEffect dependency
+  const onConfigChangeRef = useRef(onConfigChange);
+  useEffect(() => {
+    onConfigChangeRef.current = onConfigChange;
+  }, [onConfigChange]);
+
   // Derive available methods from selected gateway
   const availableMethods = useMemo((): string[] => {
     const methods = new Set<string>();
@@ -102,28 +108,16 @@ export function GatewaySelectors({
     return availableWithdrawalDays[0] ?? 0;
   }, [availableWithdrawalDays, selectedDays]);
 
-  // Notify parent of config changes
-  const notifyChange = useCallback((): void => {
-    onConfigChange({
-      gatewaySlug: selectedGateway,
-      paymentMethod: effectiveMethod,
-      withdrawalDays: effectiveDays,
-      installments,
-      planSlug: showPlanOverride ? planSlug : undefined,
-    });
-  }, [
-    selectedGateway,
-    effectiveMethod,
-    effectiveDays,
-    installments,
-    showPlanOverride,
-    planSlug,
-    onConfigChange,
-  ]);
-
+  // Notify parent of config changes (ref-based to avoid circular dependency)
   useEffect(() => {
     if (selectedGateway && effectiveMethod) {
-      notifyChange();
+      onConfigChangeRef.current({
+        gatewaySlug: selectedGateway,
+        paymentMethod: effectiveMethod,
+        withdrawalDays: effectiveDays,
+        installments,
+        planSlug: showPlanOverride ? planSlug : undefined,
+      });
     }
   }, [
     selectedGateway,
@@ -132,7 +126,6 @@ export function GatewaySelectors({
     installments,
     showPlanOverride,
     planSlug,
-    notifyChange,
   ]);
 
   function handleGatewayChange(slug: string): void {

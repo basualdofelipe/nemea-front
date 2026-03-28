@@ -170,19 +170,22 @@ export function CalculadoraClient({
     debouncedCalculate,
   ]);
 
-  function handleModeChange(newMode: CalcMode): void {
+  const handleModeChange = useCallback((newMode: CalcMode): void => {
     setMode(newMode);
     setResult(null);
-  }
+  }, []);
 
-  function handleProductSelect(product: Product): void {
+  const handleProductSelect = useCallback((product: Product): void => {
     setSelectedProduct(product);
     setResult(null);
-  }
+  }, []);
 
-  function handleGatewayConfigChange(newConfig: GatewayConfig): void {
-    setGatewayConfig(newConfig);
-  }
+  const handleGatewayConfigChange = useCallback(
+    (newConfig: GatewayConfig): void => {
+      setGatewayConfig(newConfig);
+    },
+    [],
+  );
 
   return (
     <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
