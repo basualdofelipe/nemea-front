@@ -17,6 +17,7 @@ import type { Scenario } from './types';
 interface ScenarioCardProps {
   scenario: Scenario;
   isOwner: boolean;
+  canDelete: boolean;
   onDelete: () => void;
   onTogglePublic: () => void;
 }
@@ -37,6 +38,7 @@ function formatDate(iso: string): string {
 export function ScenarioCard({
   scenario,
   isOwner,
+  canDelete,
   onDelete,
   onTogglePublic,
 }: ScenarioCardProps): ReactElement {
@@ -63,7 +65,7 @@ export function ScenarioCard({
                 (compartido por {scenario.user.name ?? scenario.user.email})
               </Badge>
             )}
-            {isOwner && (
+            {canDelete && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button

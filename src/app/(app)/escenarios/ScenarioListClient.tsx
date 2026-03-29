@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { apiClientFetch } from '@/lib/api-client';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import type { TiendanubeConfigAll } from '@/components/tiendanube-config/types';
 import type { Scenario } from '@/components/scenarios/types';
 import { ScenarioCard } from '@/components/scenarios/ScenarioCard';
@@ -41,6 +42,7 @@ export function ScenarioListClient({
 
   const currentUserId = session?.user?.id;
   const token = session?.accessToken ?? '';
+  const isAdmin = useIsAdmin();
 
   const ownScenarios = scenarios.filter((s) => s.user.id === currentUserId);
   const sharedScenarios = scenarios.filter((s) => s.user.id !== currentUserId);
@@ -126,6 +128,7 @@ export function ScenarioListClient({
             key={scenario.id}
             scenario={scenario}
             isOwner={true}
+            canDelete={true}
             onDelete={() => setDeleteTarget(scenario)}
             onTogglePublic={() => handleTogglePublic(scenario.id)}
           />
@@ -145,7 +148,8 @@ export function ScenarioListClient({
                   key={scenario.id}
                   scenario={scenario}
                   isOwner={false}
-                  onDelete={() => {}}
+                  canDelete={isAdmin}
+                  onDelete={() => setDeleteTarget(scenario)}
                   onTogglePublic={() => {}}
                 />
               ))}
