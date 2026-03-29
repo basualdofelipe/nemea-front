@@ -13,7 +13,7 @@ export default async function ScenarioEditorPage({
   const { id } = await params;
   const [scenarioRes, productsRes, configRes] = await Promise.all([
     apiFetch<{ data: Scenario }>(`/api/scenarios/${id}`),
-    apiFetch<{ data: Product[] }>('/api/products'),
+    apiFetch<{ data: Product[] }>('/api/products?includeInactive=true'),
     apiFetch<{ data: TiendanubeConfigAll }>('/api/tiendanube-config/all'),
   ]);
 
