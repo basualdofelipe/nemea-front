@@ -12,6 +12,7 @@ import {
   ShoppingBag,
   Receipt,
   Calculator,
+  LineChart,
   Users,
   Settings,
 } from 'lucide-react';
@@ -41,6 +42,7 @@ const FINANZAS_ITEMS: NavItem[] = [
 
 const HERRAMIENTAS_ITEMS: NavItem[] = [
   { label: 'Calculadora', href: '/calculadora', icon: Calculator },
+  { label: 'Escenarios', href: '/escenarios', icon: LineChart },
 ];
 
 const PRODUCTOS_ITEMS: NavItem[] = [
