@@ -7,7 +7,7 @@ import type { SupplyOption } from '@/types/supply';
 
 export default async function ProductosPage(): Promise<ReactElement> {
   const session = await auth();
-  const isAdmin = session?.user?.role === 'admin';
+  const canEdit = session?.user?.permissions?.canEditProducts ?? false;
 
   const [
     productsRes,
@@ -44,7 +44,7 @@ export default async function ProductosPage(): Promise<ReactElement> {
         colors={colorsRes.data}
         sizes={sizesRes.data}
         supplies={suppliesRes.data}
-        isAdmin={isAdmin}
+        canEdit={canEdit}
       />
     </div>
   );

@@ -18,7 +18,7 @@ interface Supplier {
 
 export default async function ProveedoresPage(): Promise<ReactElement> {
   const session = await auth();
-  const isAdmin = session?.user?.role === 'admin';
+  const canEdit = session?.user?.permissions?.canEditSupplies ?? false;
 
   const response = await apiFetch<{ data: Supplier[] }>('/api/suppliers');
 
@@ -31,7 +31,7 @@ export default async function ProveedoresPage(): Promise<ReactElement> {
         </p>
       </div>
 
-      <SupplierTable initialSuppliers={response.data} isAdmin={isAdmin} />
+      <SupplierTable initialSuppliers={response.data} canEdit={canEdit} />
     </div>
   );
 }

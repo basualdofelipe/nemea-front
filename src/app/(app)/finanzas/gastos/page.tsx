@@ -15,7 +15,7 @@ interface CategoryListResponse {
 
 export default async function GastosPage(): Promise<ReactElement> {
   const session = await auth();
-  const isAdmin = session?.user?.role === 'admin';
+  const canEdit = session?.user?.permissions?.canEditExpenses ?? false;
 
   const { dateFrom, dateTo } = getCurrentMonthRange();
 
@@ -38,7 +38,7 @@ export default async function GastosPage(): Promise<ReactElement> {
       <ExpenseTable
         initialExpenses={expensesRes.data}
         categories={categoriesRes.data}
-        isAdmin={isAdmin}
+        canEdit={canEdit}
       />
     </div>
   );

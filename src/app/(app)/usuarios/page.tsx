@@ -8,7 +8,7 @@ interface UserRow {
   id: string;
   email: string;
   name: string | null;
-  role: 'admin' | 'user';
+  role: string | { id: string; name: string };
   isActive: boolean;
   createdAt: string;
 }
@@ -16,7 +16,7 @@ interface UserRow {
 export default async function UsuariosPage(): Promise<ReactElement> {
   const session = await auth();
 
-  if (session?.user?.role !== 'admin') {
+  if (!session?.user?.permissions?.canManageUsers) {
     redirect('/');
   }
 

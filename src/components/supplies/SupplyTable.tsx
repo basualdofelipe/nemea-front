@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useIsAdmin } from '@/hooks/useIsAdmin';
+import { usePermissions } from '@/hooks/usePermissions';
 import type { Supply, SupplyType, Supplier } from './types';
 import { SupplyTypeGroup } from './SupplyTypeGroup';
 import { SupplyFormDialog } from './SupplyFormDialog';
@@ -23,7 +23,7 @@ interface SupplyTableProps {
   initialSupplies: Supply[];
   supplyTypes: SupplyType[];
   suppliers: Supplier[];
-  isAdmin: boolean;
+  canEdit?: boolean;
 }
 
 const ALL_SUPPLIERS_VALUE = '__all__';
@@ -32,10 +32,10 @@ export function SupplyTable({
   initialSupplies,
   supplyTypes,
   suppliers,
-  isAdmin: isAdminProp,
+  canEdit: canEditProp,
 }: SupplyTableProps): ReactElement {
-  const isAdminHook = useIsAdmin();
-  const isAdmin = isAdminProp || isAdminHook;
+  const { canEditSupplies } = usePermissions();
+  const canEdit = canEditProp ?? canEditSupplies;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSupplierId, setSelectedSupplierId] = useState<string | null>(
@@ -125,7 +125,7 @@ export function SupplyTable({
           </Label>
         </div>
 
-        {isAdmin && (
+        {canEdit && (
           <Button onClick={() => setShowCreateDialog(true)}>
             <Plus className='mr-1 size-4' />
             Nuevo insumo
@@ -148,7 +148,7 @@ export function SupplyTable({
               supplies={groupedSupplies[typeName]}
               supplyTypes={supplyTypes}
               allSuppliers={suppliers}
-              isAdmin={isAdmin}
+              canEdit={canEdit}
             />
           ))}
         </div>

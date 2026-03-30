@@ -52,7 +52,7 @@ interface ProductExpandedRowProps {
   finishes: CatalogItem[];
   colors: CatalogItem[];
   sizes: CatalogItem[];
-  isAdmin: boolean;
+  canEdit: boolean;
   colSpan: number;
 }
 
@@ -64,7 +64,7 @@ export function ProductExpandedRow({
   finishes,
   colors,
   sizes,
-  isAdmin,
+  canEdit,
   colSpan,
 }: ProductExpandedRowProps): ReactElement {
   const router = useRouter();
@@ -304,7 +304,7 @@ export function ProductExpandedRow({
               )}
             </div>
 
-            {isAdmin && (
+            {canEdit && (
               <>
                 <div className='flex flex-wrap items-center gap-2 border-t pt-3'>
                   <Button

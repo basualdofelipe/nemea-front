@@ -8,7 +8,7 @@ import type { TiendanubeConfigAll } from '@/components/tiendanube-config/types';
 export default async function TiendanubeConfigPage(): Promise<ReactElement> {
   const session = await auth();
 
-  if (session?.user?.role !== 'admin') {
+  if (!session?.user?.permissions?.canManageConfig) {
     redirect('/');
   }
 

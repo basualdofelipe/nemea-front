@@ -42,7 +42,7 @@ interface UserRow {
   id: string;
   email: string;
   name: string | null;
-  role: 'admin' | 'user';
+  role: string | { id: string; name: string };
   isActive: boolean;
   createdAt: string;
 }
@@ -163,9 +163,17 @@ export function UsersClient({ users }: UsersClientProps): ReactElement {
                   <TableCell>{user.name ?? '-'}</TableCell>
                   <TableCell>
                     <Badge
-                      variant={user.role === 'admin' ? 'default' : 'secondary'}
+                      variant={
+                        (typeof user.role === 'object'
+                          ? user.role.name
+                          : user.role) === 'Admin'
+                          ? 'default'
+                          : 'secondary'
+                      }
                     >
-                      {user.role === 'admin' ? 'Admin' : 'Usuario'}
+                      {typeof user.role === 'object'
+                        ? user.role.name
+                        : user.role}
                     </Badge>
                   </TableCell>
                   <TableCell>

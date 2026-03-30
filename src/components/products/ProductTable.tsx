@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { useIsAdmin } from '@/hooks/useIsAdmin';
+import { usePermissions } from '@/hooks/usePermissions';
 import type { CatalogItem, Product } from './types';
 import { getProductDisplayName } from './types';
 import { ProductTypeGroup } from './ProductTypeGroup';
@@ -22,7 +22,7 @@ interface ProductTableProps {
   colors: CatalogItem[];
   sizes: CatalogItem[];
   supplies: SupplyOption[];
-  isAdmin: boolean;
+  canEdit?: boolean;
 }
 
 export function ProductTable({
@@ -33,10 +33,10 @@ export function ProductTable({
   colors,
   sizes,
   supplies,
-  isAdmin: isAdminProp,
+  canEdit: canEditProp,
 }: ProductTableProps): ReactElement {
-  const isAdminHook = useIsAdmin();
-  const isAdmin = isAdminProp || isAdminHook;
+  const { canEditProducts } = usePermissions();
+  const canEdit = canEditProp ?? canEditProducts;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [showInactive, setShowInactive] = useState(false);
@@ -103,7 +103,7 @@ export function ProductTable({
           </Label>
         </div>
 
-        {isAdmin && (
+        {canEdit && (
           <Button onClick={() => setShowCreateDialog(true)}>
             <Plus className='mr-1 size-4' />
             Crear productos
@@ -130,7 +130,7 @@ export function ProductTable({
               finishes={finishes}
               colors={colors}
               sizes={sizes}
-              isAdmin={isAdmin}
+              canEdit={canEdit}
             />
           ))}
         </div>
