@@ -45,6 +45,16 @@ export default async function Home(): Promise<ReactElement> {
 
   const visibleCards = allCards.filter((card) => card.show);
 
+  if (visibleCards.length === 0) {
+    return (
+      <div className='p-6'>
+        <p className='text-muted-foreground text-sm'>
+          No tenés acceso a ninguna sección. Contactá al administrador.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className='p-6'>
       <div className='grid grid-cols-2 gap-4 sm:grid-cols-4'>
