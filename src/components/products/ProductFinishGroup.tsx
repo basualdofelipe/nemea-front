@@ -38,7 +38,7 @@ interface ProductFinishGroupProps {
   finishes: CatalogItem[];
   colors: CatalogItem[];
   sizes: CatalogItem[];
-  canEdit: boolean;
+  isAdmin: boolean;
 }
 
 export function ProductFinishGroup({
@@ -50,7 +50,7 @@ export function ProductFinishGroup({
   finishes,
   colors,
   sizes,
-  canEdit,
+  isAdmin,
 }: ProductFinishGroupProps): ReactElement {
   const [isOpen, setIsOpen] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -211,7 +211,7 @@ export function ProductFinishGroup({
                         finishes={finishes}
                         colors={colors}
                         sizes={sizes}
-                        canEdit={canEdit}
+                        isAdmin={isAdmin}
                         colSpan={colSpan}
                       />
                     )}

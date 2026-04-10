@@ -62,7 +62,7 @@ interface ProductDetailClientProps {
   colors: CatalogItem[];
   sizes: CatalogItem[];
   supplies: SupplyOption[];
-  canEdit: boolean;
+  isAdmin: boolean;
 }
 
 export function ProductDetailClient({
@@ -74,7 +74,7 @@ export function ProductDetailClient({
   colors,
   sizes,
   supplies,
-  canEdit,
+  isAdmin,
 }: ProductDetailClientProps): ReactElement {
   const router = useRouter();
   const { data: session } = useSession();
@@ -288,7 +288,7 @@ export function ProductDetailClient({
       </Card>
 
       {/* Admin Actions */}
-      {canEdit && (
+      {isAdmin && (
         <Card>
           <CardHeader>
             <CardTitle>Acciones</CardTitle>

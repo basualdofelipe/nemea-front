@@ -26,7 +26,7 @@ interface SupplyTypeGroupProps {
   supplies: Supply[];
   supplyTypes: SupplyType[];
   allSuppliers: Supplier[];
-  canEdit: boolean;
+  isAdmin: boolean;
 }
 
 export function SupplyTypeGroup({
@@ -34,7 +34,7 @@ export function SupplyTypeGroup({
   supplies,
   supplyTypes,
   allSuppliers,
-  canEdit,
+  isAdmin,
 }: SupplyTypeGroupProps): ReactElement {
   const [isOpen, setIsOpen] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -110,7 +110,7 @@ export function SupplyTypeGroup({
                         supply={supply}
                         supplyTypes={supplyTypes}
                         suppliers={allSuppliers}
-                        canEdit={canEdit}
+                        isAdmin={isAdmin}
                         colSpan={colSpan}
                       />
                     )}

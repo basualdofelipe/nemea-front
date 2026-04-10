@@ -1,13 +1,12 @@
 import 'next-auth';
 import 'next-auth/jwt';
-import type { Permissions } from './permissions';
 
 declare module 'next-auth' {
   interface Session {
     accessToken: string;
     user: {
       id: string;
-      permissions: Permissions;
+      role: string;
       email: string;
       name: string;
       image: string;
@@ -15,14 +14,14 @@ declare module 'next-auth' {
   }
 
   interface User {
-    permissions?: Permissions;
+    role?: string;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
     backendToken?: string;
-    permissions?: Permissions;
+    role?: string;
     userId?: string;
   }
 }

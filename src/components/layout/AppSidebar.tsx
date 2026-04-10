@@ -3,6 +3,7 @@
 import type { ReactElement } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import {
   Home,
   BookOpen,
@@ -14,7 +15,6 @@ import {
   LineChart,
   Users,
   Settings,
-  Shield,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -27,7 +27,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { usePermissions } from '@/hooks/usePermissions';
 
 interface NavItem {
   label: string;
@@ -56,17 +55,19 @@ const DATOS_BASE_ITEMS: NavItem[] = [
   { label: 'Insumos', href: '/insumos', icon: Package },
 ];
 
+const ADMIN_ITEMS: NavItem[] = [
+  { label: 'Usuarios', href: '/usuarios', icon: Users },
+  {
+    label: 'Config Tiendanube',
+    href: '/configuracion/tiendanube',
+    icon: Settings,
+  },
+];
+
 export function AppSidebar(): ReactElement {
   const pathname = usePathname();
-  const {
-    canManageUsers,
-    canManageConfig,
-    canViewProducts,
-    canViewSupplies,
-    canViewExpenses,
-    canUseCalculator,
-    canManageScenarios,
-  } = usePermissions();
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'admin';
 
   function isActive(href: string): boolean {
     if (href === '/') {
@@ -92,20 +93,6 @@ export function AppSidebar(): ReactElement {
     ));
   }
 
-  // Build admin items dynamically based on permissions
-  const adminItems: NavItem[] = [];
-  if (canManageUsers) {
-    adminItems.push({ label: 'Usuarios', href: '/usuarios', icon: Users });
-    adminItems.push({ label: 'Roles', href: '/roles', icon: Shield });
-  }
-  if (canManageConfig) {
-    adminItems.push({
-      label: 'Config Tiendanube',
-      href: '/configuracion/tiendanube',
-      icon: Settings,
-    });
-  }
-
   return (
     <Sidebar collapsible='icon'>
       <SidebarHeader className='p-4'>
@@ -124,42 +111,34 @@ export function AppSidebar(): ReactElement {
             <SidebarMenu>{renderNavItems(TOP_ITEMS)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        {canViewExpenses && (
-          <SidebarGroup>
-            <SidebarGroupLabel>Finanzas</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>{renderNavItems(FINANZAS_ITEMS)}</SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-        {(canUseCalculator || canManageScenarios) && (
-          <SidebarGroup>
-            <SidebarGroupLabel>Herramientas</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>{renderNavItems(HERRAMIENTAS_ITEMS)}</SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-        {canViewProducts && (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>{renderNavItems(PRODUCTOS_ITEMS)}</SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-        {(canViewProducts || canViewSupplies) && (
-          <SidebarGroup>
-            <SidebarGroupLabel>Datos base</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>{renderNavItems(DATOS_BASE_ITEMS)}</SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-        {(canManageUsers || canManageConfig) && (
+        <SidebarGroup>
+          <SidebarGroupLabel>Finanzas</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(FINANZAS_ITEMS)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Herramientas</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(HERRAMIENTAS_ITEMS)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(PRODUCTOS_ITEMS)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Datos base</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>{renderNavItems(DATOS_BASE_ITEMS)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        {isAdmin && (
           <SidebarGroup>
             <SidebarGroupLabel>Admin</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{renderNavItems(adminItems)}</SidebarMenu>
+              <SidebarMenu>{renderNavItems(ADMIN_ITEMS)}</SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         )}

@@ -22,7 +22,7 @@ interface SupplyExpandedRowProps {
   supply: Supply;
   supplyTypes: SupplyType[];
   suppliers: Supplier[];
-  canEdit: boolean;
+  isAdmin: boolean;
   colSpan: number;
 }
 
@@ -30,7 +30,7 @@ export function SupplyExpandedRow({
   supply,
   supplyTypes,
   suppliers,
-  canEdit,
+  isAdmin,
   colSpan,
 }: SupplyExpandedRowProps): ReactElement {
   const router = useRouter();
@@ -107,7 +107,7 @@ export function SupplyExpandedRow({
               )}
             </div>
 
-            {canEdit && (
+            {isAdmin && (
               <div className='flex flex-wrap items-center gap-2 border-t pt-3'>
                 <Button
                   size='sm'

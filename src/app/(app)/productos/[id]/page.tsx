@@ -30,7 +30,7 @@ export default async function ProductDetailPage({
 }): Promise<ReactElement> {
   const { id } = await params;
   const session = await auth();
-  const canEdit = session?.user?.permissions?.canEditProducts ?? false;
+  const isAdmin = session?.user?.role === 'admin';
 
   let productData: ProductWithCostResponse;
   try {
@@ -70,7 +70,7 @@ export default async function ProductDetailPage({
       colors={colorsRes.data}
       sizes={sizesRes.data}
       supplies={suppliesRes.data}
-      canEdit={canEdit}
+      isAdmin={isAdmin}
     />
   );
 }

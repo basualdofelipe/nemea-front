@@ -35,12 +35,12 @@ interface Supplier {
 
 interface SupplierTableProps {
   initialSuppliers: Supplier[];
-  canEdit: boolean;
+  isAdmin: boolean;
 }
 
 export function SupplierTable({
   initialSuppliers,
-  canEdit,
+  isAdmin,
 }: SupplierTableProps): ReactElement {
   const router = useRouter();
   const { data: session } = useSession();
@@ -88,7 +88,7 @@ export function SupplierTable({
             className='pl-9'
           />
         </div>
-        {canEdit && (
+        {isAdmin && (
           <Button onClick={() => router.push('/proveedores/nuevo')}>
             <Plus className='mr-1 size-4' />
             Nuevo Proveedor
@@ -105,14 +105,14 @@ export function SupplierTable({
               <TableHead className='hidden md:table-cell'>Telefono</TableHead>
               <TableHead className='hidden lg:table-cell'>WhatsApp</TableHead>
               <TableHead>Estado</TableHead>
-              {canEdit && <TableHead className='w-12' />}
+              {isAdmin && <TableHead className='w-12' />}
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={canEdit ? 6 : 5}
+                  colSpan={isAdmin ? 6 : 5}
                   className='text-muted-foreground h-24 text-center'
                 >
                   {search
@@ -137,7 +137,7 @@ export function SupplierTable({
                     {supplier.whatsapp ?? '-'}
                   </TableCell>
                   <TableCell>
-                    {canEdit ? (
+                    {isAdmin ? (
                       <Switch
                         checked={supplier.isActive}
                         onCheckedChange={() =>
@@ -152,7 +152,7 @@ export function SupplierTable({
                       </Badge>
                     )}
                   </TableCell>
-                  {canEdit && (
+                  {isAdmin && (
                     <TableCell>
                       <Button
                         size='icon'
