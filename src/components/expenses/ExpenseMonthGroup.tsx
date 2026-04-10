@@ -28,7 +28,7 @@ import {
 interface ExpenseMonthGroupProps {
   monthKey: string;
   expenses: Expense[];
-  isAdmin: boolean;
+  canEdit: boolean;
   onEdit: (expense: Expense) => void;
   onDelete: (expense: Expense) => void;
 }
@@ -36,7 +36,7 @@ interface ExpenseMonthGroupProps {
 export function ExpenseMonthGroup({
   monthKey,
   expenses,
-  isAdmin,
+  canEdit,
   onEdit,
   onDelete,
 }: ExpenseMonthGroupProps): ReactElement {
@@ -47,7 +47,7 @@ export function ExpenseMonthGroup({
     0,
   );
 
-  const colSpan = isAdmin ? 5 : 4;
+  const colSpan = canEdit ? 5 : 4;
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} defaultOpen>
@@ -75,7 +75,7 @@ export function ExpenseMonthGroup({
                 <TableHead>Concepto</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead className='text-right'>Monto</TableHead>
-                {isAdmin && (
+                {canEdit && (
                   <TableHead className='w-[100px] text-right'>
                     Acciones
                   </TableHead>
@@ -107,7 +107,7 @@ export function ExpenseMonthGroup({
                     <TableCell className='text-right font-medium'>
                       ${formatAmount(expense.amount)}
                     </TableCell>
-                    {isAdmin && (
+                    {canEdit && (
                       <TableCell className='text-right'>
                         <div className='flex justify-end gap-1'>
                           <Button

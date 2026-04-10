@@ -28,7 +28,7 @@ interface Supply {
 
 export default async function InsumosPage(): Promise<ReactElement> {
   const session = await auth();
-  const isAdmin = session?.user?.role === 'admin';
+  const canEdit = session?.user?.permissions?.canEditSupplies ?? false;
 
   const [suppliesRes, typesRes, suppliersRes] = await Promise.all([
     apiFetch<{ data: Supply[] }>('/api/supplies?includeInactive=true'),
@@ -49,7 +49,7 @@ export default async function InsumosPage(): Promise<ReactElement> {
         initialSupplies={suppliesRes.data}
         supplyTypes={typesRes.data}
         suppliers={suppliersRes.data}
-        isAdmin={isAdmin}
+        canEdit={canEdit}
       />
     </div>
   );

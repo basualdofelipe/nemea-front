@@ -25,7 +25,7 @@ import { DeleteExpenseDialog } from './DeleteExpenseDialog';
 interface ExpenseTableProps {
   initialExpenses: Expense[];
   categories: ExpenseCategory[];
-  isAdmin: boolean;
+  canEdit: boolean;
 }
 
 interface ExpenseListResponse {
@@ -37,7 +37,7 @@ const ALL_CATEGORIES = '__all__';
 export function ExpenseTable({
   initialExpenses,
   categories,
-  isAdmin,
+  canEdit,
 }: ExpenseTableProps): ReactElement {
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
@@ -136,7 +136,7 @@ export function ExpenseTable({
               <p className='text-2xl font-bold'>{totalCount}</p>
             </div>
           </div>
-          {isAdmin && (
+          {canEdit && (
             <Button
               onClick={() => {
                 setEditingExpense(undefined);
@@ -204,7 +204,7 @@ export function ExpenseTable({
                 key={monthKey}
                 monthKey={monthKey}
                 expenses={monthExpenses}
-                isAdmin={isAdmin}
+                canEdit={canEdit}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />

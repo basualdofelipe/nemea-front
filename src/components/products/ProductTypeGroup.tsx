@@ -26,7 +26,7 @@ interface ProductTypeGroupProps {
   finishes: CatalogItem[];
   colors: CatalogItem[];
   sizes: CatalogItem[];
-  isAdmin: boolean;
+  canEdit: boolean;
 }
 
 export function ProductTypeGroup({
@@ -38,7 +38,7 @@ export function ProductTypeGroup({
   finishes,
   colors,
   sizes,
-  isAdmin,
+  canEdit,
 }: ProductTypeGroupProps): ReactElement {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
@@ -101,7 +101,7 @@ export function ProductTypeGroup({
               Costo prom: {formatCost(avgCost)}
             </Badge>
           )}
-          {isAdmin && (
+          {canEdit && (
             <div
               className='ml-auto flex items-center gap-1'
               onClick={(e) => e.stopPropagation()}
@@ -133,7 +133,7 @@ export function ProductTypeGroup({
               finishes={finishes}
               colors={colors}
               sizes={sizes}
-              isAdmin={isAdmin}
+              canEdit={canEdit}
             />
           ))}
         </div>

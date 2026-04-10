@@ -38,7 +38,7 @@ interface ProductNameGroupProps {
   finishes: CatalogItem[];
   colors: CatalogItem[];
   sizes: CatalogItem[];
-  isAdmin: boolean;
+  canEdit: boolean;
 }
 
 export function ProductNameGroup({
@@ -50,7 +50,7 @@ export function ProductNameGroup({
   finishes,
   colors,
   sizes,
-  isAdmin,
+  canEdit,
 }: ProductNameGroupProps): ReactElement {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
@@ -173,7 +173,7 @@ export function ProductNameGroup({
               </Tooltip>
             </TooltipProvider>
           )}
-          {isAdmin && (
+          {canEdit && (
             <div
               className='ml-auto flex items-center gap-1'
               onClick={(e) => e.stopPropagation()}
@@ -214,7 +214,7 @@ export function ProductNameGroup({
               finishes={finishes}
               colors={colors}
               sizes={sizes}
-              isAdmin={isAdmin}
+              canEdit={canEdit}
             />
           ))}
         </div>
