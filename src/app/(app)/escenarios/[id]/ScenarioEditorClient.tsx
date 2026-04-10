@@ -196,7 +196,10 @@ export function ScenarioEditorClient({
         {isOwner && (
           <div className='flex items-center gap-2'>
             <span className='text-muted-foreground text-sm'>Compartir</span>
-            <Switch checked={isPublic} onCheckedChange={handleTogglePublic} />
+            <Switch
+              checked={isPublic}
+              onCheckedChange={() => void handleTogglePublic()}
+            />
           </div>
         )}
       </div>
