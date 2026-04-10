@@ -52,7 +52,7 @@ export function ProductFinishGroup({
   sizes,
   canEdit,
 }: ProductFinishGroupProps): ReactElement {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const colSpan = 6;
@@ -103,9 +103,9 @@ export function ProductFinishGroup({
                 <TableHead>SKU</TableHead>
                 <TableHead>Color</TableHead>
                 <TableHead>Talle</TableHead>
-                <TableHead>Costo</TableHead>
-                <TableHead>Precio Venta</TableHead>
-                <TableHead>Margen</TableHead>
+                <TableHead className='text-right'>Costo</TableHead>
+                <TableHead className='text-right'>Precio Venta</TableHead>
+                <TableHead className='text-right'>Margen</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -146,7 +146,7 @@ export function ProductFinishGroup({
                           ? '\u2014'
                           : product.size.name}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className='text-right'>
                         {product.cost === null &&
                         product.costWarnings.length === 0 ? (
                           <TooltipProvider>
@@ -179,10 +179,10 @@ export function ProductFinishGroup({
                           </span>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className='text-right'>
                         {formatSellingPrice(product.currentPrice)}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className='text-right'>
                         {(() => {
                           const margin = formatMargin(
                             product.cost,

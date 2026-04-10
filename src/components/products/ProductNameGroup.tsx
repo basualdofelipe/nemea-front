@@ -53,7 +53,7 @@ export function ProductNameGroup({
   canEdit,
 }: ProductNameGroupProps): ReactElement {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [showGroupBomEditor, setShowGroupBomEditor] = useState(false);
   const [showBatchPrice, setShowBatchPrice] = useState(false);
   const [hasDivergence, setHasDivergence] = useState(false);

@@ -202,10 +202,16 @@ export function ProductExpandedRow({
                             <TableRow>
                               <TableHead>Insumo</TableHead>
                               <TableHead>Tipo</TableHead>
-                              <TableHead>Cantidad</TableHead>
+                              <TableHead className='text-right'>
+                                Cantidad
+                              </TableHead>
                               <TableHead>Unidad</TableHead>
-                              <TableHead>Precio Unit.</TableHead>
-                              <TableHead>Costo Linea</TableHead>
+                              <TableHead className='text-right'>
+                                Precio Unit.
+                              </TableHead>
+                              <TableHead className='text-right'>
+                                Costo Linea
+                              </TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -225,12 +231,14 @@ export function ProductExpandedRow({
                                     )}
                                   </TableCell>
                                   <TableCell>{item.supply.type.name}</TableCell>
-                                  <TableCell>{item.quantity}</TableCell>
+                                  <TableCell className='text-right'>
+                                    {item.quantity}
+                                  </TableCell>
                                   <TableCell>
                                     {UNIT_LABELS[item.supply.unitType] ??
                                       item.supply.unitType}
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell className='text-right'>
                                     {cb?.unitPrice != null ? (
                                       formatCost(cb.unitPrice)
                                     ) : (
@@ -249,7 +257,7 @@ export function ProductExpandedRow({
                                       </TooltipProvider>
                                     )}
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell className='text-right'>
                                     {cb?.lineCost != null
                                       ? formatCost(cb.lineCost)
                                       : '\u2014'}

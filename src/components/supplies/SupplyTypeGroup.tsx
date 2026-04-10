@@ -62,7 +62,7 @@ export function SupplyTypeGroup({
               <TableRow>
                 <TableHead>Nombre</TableHead>
                 <TableHead>Proveedor</TableHead>
-                <TableHead>Precio Actual</TableHead>
+                <TableHead className='text-right'>Precio Actual</TableHead>
                 <TableHead>Estado</TableHead>
               </TableRow>
             </TableHeader>
@@ -93,7 +93,7 @@ export function SupplyTypeGroup({
                         {supply.name}
                       </TableCell>
                       <TableCell>{supply.supplier.name}</TableCell>
-                      <TableCell>
+                      <TableCell className='text-right'>
                         {formatPrice(supply.currentPrice, supply.unitType)}
                       </TableCell>
                       <TableCell>

@@ -93,7 +93,7 @@ export function ScenarioEditorClient({
   function handleClearOverrides(): void {
     setOverridesState({});
     setResetKey((k) => k + 1);
-    toast('Overrides limpiados');
+    toast.success('Overrides limpiados');
   }
 
   function handleBulkOverride(
@@ -113,7 +113,7 @@ export function ScenarioEditorClient({
     setOverridesState(newOverrides);
     setResetKey((k) => k + 1);
     setBulkDialogOpen(false);
-    toast(`Override aplicado a ${count} productos`);
+    toast.success(`Override aplicado a ${count} productos`);
   }
 
   async function handleSaveAndCalculate(): Promise<void> {
