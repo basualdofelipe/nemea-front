@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactElement } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -77,12 +78,20 @@ export function AppSidebar(): ReactElement {
     <Sidebar collapsible='icon'>
       <SidebarHeader className='p-4'>
         <Link href='/' className='flex items-center gap-2'>
-          <span className='engraving-title text-primary text-xl tracking-widest group-data-[collapsible=icon]:hidden'>
-            NEMEA
-          </span>
-          <span className='engraving-title text-primary hidden text-xl tracking-widest group-data-[collapsible=icon]:block'>
-            N
-          </span>
+          <Image
+            src='/brand/logo.png'
+            alt='NEMEA'
+            width={100}
+            height={100}
+            className='h-8 w-auto object-contain group-data-[collapsible=icon]:hidden'
+          />
+          <Image
+            src='/brand/Isotipo.png'
+            alt='NEMEA'
+            width={28}
+            height={28}
+            className='hidden size-7 object-contain group-data-[collapsible=icon]:block'
+          />
         </Link>
       </SidebarHeader>
       <SidebarContent>

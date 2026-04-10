@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { auth, signIn } from '@/auth';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -51,9 +52,13 @@ export default async function LoginPage({
   return (
     <Card className='w-full max-w-sm'>
       <CardHeader className='items-center space-y-2 text-center'>
-        <h1 className='engraving-title text-primary text-4xl tracking-widest'>
-          NEMEA
-        </h1>
+        <Image
+          src='/brand/Isotipo.png'
+          alt='NEMEA'
+          width={80}
+          height={80}
+          className='size-20 object-contain'
+        />
         <p className='text-muted-foreground text-sm'>
           Gestion de costos para marroquineria
         </p>

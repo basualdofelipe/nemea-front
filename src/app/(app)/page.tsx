@@ -1,47 +1,66 @@
-'use client';
-
 import type { ReactElement } from 'react';
-import { useTheme } from 'next-themes';
-import { useSyncExternalStore } from 'react';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { ShoppingBag, Calculator, Package, Receipt } from 'lucide-react';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { auth } from '@/auth';
+import { NO_PERMISSIONS, type Permissions } from '@/types/permissions';
 
-function subscribe(): () => void {
-  return () => {};
+interface QuickLinkCard {
+  label: string;
+  href: string;
+  icon: typeof ShoppingBag;
+  show: boolean;
 }
 
-function getSnapshot(): boolean {
-  return true;
-}
+export default async function Home(): Promise<ReactElement> {
+  const session = await auth();
+  const permissions: Permissions = session?.user?.permissions ?? NO_PERMISSIONS;
 
-function getServerSnapshot(): boolean {
-  return false;
-}
+  const allCards: QuickLinkCard[] = [
+    {
+      label: 'Productos',
+      href: '/productos',
+      icon: ShoppingBag,
+      show: permissions.canViewProducts,
+    },
+    {
+      label: 'Calculadora',
+      href: '/calculadora',
+      icon: Calculator,
+      show: permissions.canUseCalculator,
+    },
+    {
+      label: 'Insumos',
+      href: '/insumos',
+      icon: Package,
+      show: permissions.canViewSupplies,
+    },
+    {
+      label: 'Gastos',
+      href: '/finanzas/gastos',
+      icon: Receipt,
+      show: permissions.canViewExpenses,
+    },
+  ];
 
-function useMounted(): boolean {
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-}
-
-export default function Home(): ReactElement {
-  const { theme, setTheme } = useTheme();
-  const mounted = useMounted();
-
-  function toggleTheme(): void {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  }
+  const visibleCards = allCards.filter((card) => card.show);
 
   return (
-    <div className='flex flex-col items-center justify-center gap-8 py-20'>
-      <h1 className='engraving-title text-primary text-6xl tracking-widest'>
-        NEMEA
-      </h1>
-      <p className='text-muted-foreground font-sans text-lg'>
-        Gestion y pricing para marroquineria
-      </p>
-      {mounted && (
-        <Button variant='outline' onClick={toggleTheme}>
-          {theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
-        </Button>
-      )}
+    <div className='p-6'>
+      <div className='grid grid-cols-2 gap-4 sm:grid-cols-4'>
+        {visibleCards.map((card) => (
+          <Link key={card.href} href={card.href}>
+            <Card className='hover:bg-muted/50 cursor-pointer transition-colors'>
+              <CardHeader className='flex flex-col items-center gap-2 text-center'>
+                <card.icon className='text-primary size-8' />
+                <CardTitle className='text-base font-semibold'>
+                  {card.label}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
