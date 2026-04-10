@@ -37,29 +37,31 @@ import {
 } from '@/components/ui/table';
 import { apiClientFetch } from '@/lib/api-client';
 import { formatDate } from '@/lib/formatters';
+import type { RoleOption } from '@/types/role';
 
 interface UserRow {
   id: string;
   email: string;
   name: string | null;
-  role: { id: string; name: string } | string;
+  role: { id: string; name: string };
   isActive: boolean;
   createdAt: string;
 }
 
 interface UsersClientProps {
   users: UserRow[];
+  roles: RoleOption[];
 }
 
 const createUserSchema = z.object({
   email: z.string().email('Email invalido').min(1, 'El email es obligatorio'),
   name: z.string().optional(),
-  role: z.enum(['admin', 'user']),
+  roleId: z.string().uuid('Selecciona un rol'),
 });
 
 type CreateUserFormData = z.infer<typeof createUserSchema>;
 
-export function UsersClient({ users }: UsersClientProps): ReactElement {
+export function UsersClient({ users, roles }: UsersClientProps): ReactElement {
   const router = useRouter();
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
@@ -80,7 +82,7 @@ export function UsersClient({ users }: UsersClientProps): ReactElement {
     defaultValues: {
       email: '',
       name: '',
-      role: 'user',
+      roleId: '',
     },
   });
 
@@ -90,7 +92,7 @@ export function UsersClient({ users }: UsersClientProps): ReactElement {
         method: 'POST',
         body: JSON.stringify({
           email: data.email,
-          role: data.role,
+          roleId: data.roleId,
           name: data.name || undefined,
         }),
       });
@@ -162,10 +164,12 @@ export function UsersClient({ users }: UsersClientProps): ReactElement {
                   <TableCell className='font-medium'>{user.email}</TableCell>
                   <TableCell>{user.name ?? '-'}</TableCell>
                   <TableCell>
-                    <Badge variant='secondary'>
-                      {typeof user.role === 'object'
-                        ? user.role.name
-                        : user.role}
+                    <Badge
+                      variant={
+                        user.role.name === 'ADMIN' ? 'default' : 'secondary'
+                      }
+                    >
+                      {user.role.name}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -241,24 +245,32 @@ export function UsersClient({ users }: UsersClientProps): ReactElement {
             </div>
 
             <div className='space-y-2'>
-              <Label>Rol</Label>
+              <Label>
+                Rol <span className='text-destructive'>*</span>
+              </Label>
               <Select
-                value={watch('role')}
+                value={watch('roleId')}
                 onValueChange={(value) =>
-                  setValue('role', value as 'admin' | 'user', {
-                    shouldValidate: true,
-                  })
+                  setValue('roleId', value, { shouldValidate: true })
                 }
                 disabled={isSubmitting}
               >
                 <SelectTrigger className='w-full'>
-                  <SelectValue placeholder='Seleccionar rol' />
+                  <SelectValue placeholder='Selecciona un rol' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='user'>Usuario</SelectItem>
-                  <SelectItem value='admin'>Admin</SelectItem>
+                  {roles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+              {errors.roleId && (
+                <p className='text-destructive text-sm'>
+                  {errors.roleId.message}
+                </p>
+              )}
             </div>
 
             <DialogFooter>
