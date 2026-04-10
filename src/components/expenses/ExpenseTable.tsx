@@ -127,13 +127,13 @@ export function ExpenseTable({
           <div className='flex items-center gap-6'>
             <div>
               <p className='text-muted-foreground text-sm'>Total</p>
-              <p className='text-2xl font-bold'>
+              <p className='text-2xl font-semibold'>
                 ${formatAmount(totalAmount.toString())}
               </p>
             </div>
             <div>
               <p className='text-muted-foreground text-sm'>Gastos</p>
-              <p className='text-2xl font-bold'>{totalCount}</p>
+              <p className='text-2xl font-semibold'>{totalCount}</p>
             </div>
           </div>
           {canEdit && (

@@ -93,7 +93,7 @@ export function InstallmentsSection({
           ) : (
             installments.map((inst) => (
               <TableRow key={inst.id}>
-                <TableCell className='font-medium'>
+                <TableCell className='font-semibold'>
                   {inst.installments === 1
                     ? '1 cuota (contado)'
                     : `${inst.installments} cuotas`}

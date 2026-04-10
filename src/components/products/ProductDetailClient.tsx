@@ -212,7 +212,7 @@ export function ProductDetailClient({
                       );
                     })}
                     {bomItems.length > 0 && (
-                      <TableRow className='font-medium'>
+                      <TableRow className='font-semibold'>
                         <TableCell colSpan={5} className='text-right'>
                           Total
                         </TableCell>
@@ -237,7 +237,7 @@ export function ProductDetailClient({
         <CardContent>
           <div className='grid gap-4 sm:grid-cols-3'>
             <div>
-              <p className='text-muted-foreground text-xs font-medium uppercase'>
+              <p className='text-muted-foreground text-xs font-semibold uppercase'>
                 Costo total
               </p>
               <p className='text-lg font-semibold'>
@@ -247,7 +247,7 @@ export function ProductDetailClient({
               </p>
             </div>
             <div>
-              <p className='text-muted-foreground text-xs font-medium uppercase'>
+              <p className='text-muted-foreground text-xs font-semibold uppercase'>
                 Precio de venta
               </p>
               <p className='text-lg font-semibold'>
@@ -257,7 +257,7 @@ export function ProductDetailClient({
               </p>
             </div>
             <div>
-              <p className='text-muted-foreground text-xs font-medium uppercase'>
+              <p className='text-muted-foreground text-xs font-semibold uppercase'>
                 Margen
               </p>
               <p className='text-lg font-semibold'>
@@ -273,7 +273,7 @@ export function ProductDetailClient({
 
           {product.costWarnings.length > 0 && (
             <div className='mt-4 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950'>
-              <div className='flex items-center gap-2 text-sm font-medium text-amber-800 dark:text-amber-200'>
+              <div className='flex items-center gap-2 text-sm font-semibold text-amber-800 dark:text-amber-200'>
                 <AlertTriangle className='size-4' />
                 Advertencias
               </div>

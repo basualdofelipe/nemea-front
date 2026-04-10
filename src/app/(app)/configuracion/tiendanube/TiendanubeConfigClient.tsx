@@ -79,7 +79,7 @@ export function TiendanubeConfigClient({
   return (
     <div className='space-y-6'>
       <div className='flex items-center gap-3'>
-        <span className='text-sm font-medium'>Plan Tiendanube:</span>
+        <span className='text-sm font-semibold'>Plan Tiendanube:</span>
         <Select value={selectedPlan.slug} onValueChange={handlePlanChange}>
           <SelectTrigger className='w-48'>
             <SelectValue placeholder='Seleccionar plan' />

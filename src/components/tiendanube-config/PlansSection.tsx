@@ -118,7 +118,7 @@ export function PlansSection({
         <TableBody>
           {plans.map((plan) => (
             <TableRow key={plan.id}>
-              <TableCell className='font-medium'>{plan.label}</TableCell>
+              <TableCell className='font-semibold'>{plan.label}</TableCell>
               <TableCell>
                 <Badge variant={plan.onlyPagoNube ? 'default' : 'secondary'}>
                   {plan.onlyPagoNube ? 'Si' : 'No'}

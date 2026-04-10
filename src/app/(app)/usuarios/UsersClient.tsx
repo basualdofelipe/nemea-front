@@ -161,7 +161,7 @@ export function UsersClient({ users, roles }: UsersClientProps): ReactElement {
                   key={user.id}
                   className={!user.isActive ? 'opacity-50' : ''}
                 >
-                  <TableCell className='font-medium'>{user.email}</TableCell>
+                  <TableCell className='font-semibold'>{user.email}</TableCell>
                   <TableCell>{user.name ?? '-'}</TableCell>
                   <TableCell>
                     <Badge

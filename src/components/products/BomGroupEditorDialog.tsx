@@ -229,7 +229,7 @@ export function BomGroupEditorDialog({
         ) : (
           <div className='space-y-4'>
             <div>
-              <p className='mb-2 text-sm font-medium'>Productos</p>
+              <p className='mb-2 text-sm font-semibold'>Productos</p>
               <div className='max-h-40 space-y-1 overflow-y-auto rounded-md border p-2'>
                 {products.map((product) => (
                   <label
@@ -258,7 +258,7 @@ export function BomGroupEditorDialog({
             </div>
 
             <div>
-              <p className='mb-2 text-sm font-medium'>Materiales</p>
+              <p className='mb-2 text-sm font-semibold'>Materiales</p>
               <div className='space-y-2'>
                 {rows.length === 0 ? (
                   <p className='text-muted-foreground py-2 text-center text-sm'>
@@ -266,7 +266,7 @@ export function BomGroupEditorDialog({
                   </p>
                 ) : (
                   <>
-                    <div className='text-muted-foreground grid grid-cols-[1fr_100px_60px_40px] gap-2 text-xs font-medium'>
+                    <div className='text-muted-foreground grid grid-cols-[1fr_100px_60px_40px] gap-2 text-xs font-semibold'>
                       <span>Insumo</span>
                       <span>Cantidad</span>
                       <span>Unidad</span>

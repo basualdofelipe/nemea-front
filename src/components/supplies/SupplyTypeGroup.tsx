@@ -49,7 +49,7 @@ export function SupplyTypeGroup({
             isOpen ? '' : '-rotate-90'
           }`}
         />
-        <span className='font-medium'>{typeName}</span>
+        <span className='font-semibold'>{typeName}</span>
         <Badge variant='secondary' className='ml-1'>
           {supplies.length} {supplies.length === 1 ? 'insumo' : 'insumos'}
         </Badge>
@@ -89,7 +89,7 @@ export function SupplyTypeGroup({
                         )
                       }
                     >
-                      <TableCell className='font-medium'>
+                      <TableCell className='font-semibold'>
                         {supply.name}
                       </TableCell>
                       <TableCell>{supply.supplier.name}</TableCell>

@@ -68,7 +68,7 @@ function LineItem({
         {label}
       </span>
       <span
-        className={`text-sm ${bold ? 'font-semibold' : ''} ${large ? 'text-lg font-bold' : ''} ${colorClass} tabular-nums`}
+        className={`text-sm ${bold ? 'font-semibold' : ''} ${large ? 'text-lg font-semibold' : ''} ${colorClass} tabular-nums`}
       >
         {value}
       </span>

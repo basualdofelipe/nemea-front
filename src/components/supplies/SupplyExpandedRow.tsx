@@ -66,13 +66,13 @@ export function SupplyExpandedRow({
           <div className='space-y-3'>
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   Notas
                 </p>
                 <p className='text-sm'>{supply.notes ?? 'Sin notas'}</p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   Proveedor
                 </p>
                 <Link
@@ -87,16 +87,16 @@ export function SupplyExpandedRow({
 
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   Precio actual
                 </p>
-                <p className='text-sm font-medium'>
+                <p className='text-sm font-semibold'>
                   {formatPrice(supply.currentPrice, supply.unitType)}
                 </p>
               </div>
               {supply.lastPriceUpdate && (
                 <div>
-                  <p className='text-muted-foreground text-xs font-medium uppercase'>
+                  <p className='text-muted-foreground text-xs font-semibold uppercase'>
                     Ultima actualizacion
                   </p>
                   <p className='text-muted-foreground inline-flex items-center gap-1 text-sm'>

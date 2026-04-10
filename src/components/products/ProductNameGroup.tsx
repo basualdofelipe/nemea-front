@@ -144,7 +144,7 @@ export function ProductNameGroup({
               isOpen ? '' : '-rotate-90'
             }`}
           />
-          <span className='text-sm font-medium'>{productName}</span>
+          <span className='text-sm font-semibold'>{productName}</span>
           <Badge variant='secondary' className='ml-1 text-xs'>
             {products.length} {products.length === 1 ? 'producto' : 'productos'}
           </Badge>

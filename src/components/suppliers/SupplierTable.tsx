@@ -126,7 +126,9 @@ export function SupplierTable({
                   key={supplier.id}
                   className={supplier.isActive ? '' : 'opacity-50'}
                 >
-                  <TableCell className='font-medium'>{supplier.name}</TableCell>
+                  <TableCell className='font-semibold'>
+                    {supplier.name}
+                  </TableCell>
                   <TableCell className='hidden md:table-cell'>
                     {supplier.email ?? '-'}
                   </TableCell>

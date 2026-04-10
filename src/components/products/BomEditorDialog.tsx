@@ -134,7 +134,7 @@ export function BomEditorDialog({
             </p>
           ) : (
             <div className='space-y-2'>
-              <div className='text-muted-foreground grid grid-cols-[1fr_100px_60px_40px] gap-2 text-xs font-medium'>
+              <div className='text-muted-foreground grid grid-cols-[1fr_100px_60px_40px] gap-2 text-xs font-semibold'>
                 <span>Insumo</span>
                 <span>Cantidad</span>
                 <span>Unidad</span>

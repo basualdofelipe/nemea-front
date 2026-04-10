@@ -92,7 +92,7 @@ export function ProductTypeGroup({
               isOpen ? '' : '-rotate-90'
             }`}
           />
-          <span className='font-medium'>{typeName}</span>
+          <span className='font-semibold'>{typeName}</span>
           <Badge variant='secondary' className='ml-1'>
             {products.length} {products.length === 1 ? 'producto' : 'productos'}
           </Badge>

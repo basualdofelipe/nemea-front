@@ -128,7 +128,7 @@ function GatewaySectionContent({
           ) : (
             rates.map((rate) => (
               <TableRow key={rate.id}>
-                <TableCell className='font-medium'>
+                <TableCell className='font-semibold'>
                   {PAYMENT_METHOD_LABELS[rate.paymentMethod] ??
                     rate.paymentMethod}
                 </TableCell>

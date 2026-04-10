@@ -57,7 +57,7 @@ export function ExpenseMonthGroup({
             isOpen ? '' : '-rotate-90'
           }`}
         />
-        <span className='font-medium'>{formatMonthLabel(monthKey)}</span>
+        <span className='font-semibold'>{formatMonthLabel(monthKey)}</span>
         <Badge variant='secondary' className='ml-1'>
           {expenses.length} {expenses.length === 1 ? 'gasto' : 'gastos'}
         </Badge>
@@ -99,12 +99,12 @@ export function ExpenseMonthGroup({
                     <TableCell>{expense.concept}</TableCell>
                     <TableCell>
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${getCategoryColor(expense.category.name)}`}
+                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${getCategoryColor(expense.category.name)}`}
                       >
                         {expense.category.name}
                       </span>
                     </TableCell>
-                    <TableCell className='text-right font-medium'>
+                    <TableCell className='text-right font-semibold'>
                       ${formatAmount(expense.amount)}
                     </TableCell>
                     {canEdit && (

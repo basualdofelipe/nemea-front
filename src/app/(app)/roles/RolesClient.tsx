@@ -343,7 +343,7 @@ export function RolesClient({ initialRoles }: RolesClientProps): ReactElement {
                       : 'secondary';
                 return (
                   <TableRow key={role.id}>
-                    <TableCell className='font-medium'>
+                    <TableCell className='font-semibold'>
                       <span className='flex items-center gap-2'>
                         {role.name}
                         {role.isSystem && (

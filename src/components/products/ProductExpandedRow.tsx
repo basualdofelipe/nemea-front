@@ -132,15 +132,15 @@ export function ProductExpandedRow({
           <div className='space-y-3'>
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   Producto
                 </p>
-                <p className='text-sm font-medium'>
+                <p className='text-sm font-semibold'>
                   {getProductDisplayName(product)}
                 </p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   SKU
                 </p>
                 <p className='font-mono text-sm'>{product.skuCode}</p>
@@ -149,16 +149,16 @@ export function ProductExpandedRow({
 
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   Precio de venta
                 </p>
-                <p className='text-sm font-medium'>
+                <p className='text-sm font-semibold'>
                   {formatSellingPrice(product.currentPrice)}
                 </p>
               </div>
               {product.lastPriceUpdate && (
                 <div>
-                  <p className='text-muted-foreground text-xs font-medium uppercase'>
+                  <p className='text-muted-foreground text-xs font-semibold uppercase'>
                     Ultima actualizacion de precio
                   </p>
                   <p className='text-muted-foreground text-sm'>
@@ -169,7 +169,7 @@ export function ProductExpandedRow({
             </div>
 
             <div>
-              <p className='text-muted-foreground mb-2 text-xs font-medium uppercase'>
+              <p className='text-muted-foreground mb-2 text-xs font-semibold uppercase'>
                 Materiales (BOM)
               </p>
               {bomLoading ? (
@@ -266,7 +266,7 @@ export function ProductExpandedRow({
                               );
                             })}
                             {bomItems.length > 0 && (
-                              <TableRow className='font-medium'>
+                              <TableRow className='font-semibold'>
                                 <TableCell colSpan={5} className='text-right'>
                                   Total
                                 </TableCell>
@@ -284,19 +284,19 @@ export function ProductExpandedRow({
                       <div className='text-muted-foreground flex flex-wrap gap-4 text-sm'>
                         <span>
                           Costo total:{' '}
-                          <span className='text-foreground font-medium'>
+                          <span className='text-foreground font-semibold'>
                             {formatCost(product.cost)}
                           </span>
                         </span>
                         <span>
                           Precio venta:{' '}
-                          <span className='text-foreground font-medium'>
+                          <span className='text-foreground font-semibold'>
                             {formatSellingPrice(product.currentPrice)}
                           </span>
                         </span>
                         <span>
                           Margen:{' '}
-                          <span className='text-foreground font-medium'>
+                          <span className='text-foreground font-semibold'>
                             {margin.amount}
                             {margin.percent !== '\u2014' && (
                               <span className='text-muted-foreground ml-1'>
