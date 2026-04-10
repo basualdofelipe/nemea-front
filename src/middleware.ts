@@ -1,19 +1,26 @@
 import { auth } from '@/auth';
+import type { Permissions } from '@/types/permissions';
 
-const ADMIN_ONLY_ROUTES = [
-  '/catalogos',
-  '/proveedores',
-  '/insumos',
-  '/productos',
-  '/finanzas',
-  '/usuarios',
-  '/configuracion',
-];
+const ROUTE_PERMISSIONS: Record<string, keyof Permissions> = {
+  '/catalogos': 'canViewProducts',
+  '/proveedores': 'canViewSupplies',
+  '/insumos': 'canViewSupplies',
+  '/productos': 'canViewProducts',
+  '/finanzas': 'canViewExpenses',
+  '/usuarios': 'canManageUsers',
+  '/configuracion': 'canManageConfig',
+  '/calculadora': 'canUseCalculator',
+  '/escenarios': 'canManageScenarios',
+  '/roles': 'canManageUsers',
+};
 
-function isAdminOnlyRoute(pathname: string): boolean {
-  return ADMIN_ONLY_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
+function getRequiredPermission(pathname: string): keyof Permissions | null {
+  for (const [route, permission] of Object.entries(ROUTE_PERMISSIONS)) {
+    if (pathname === route || pathname.startsWith(`${route}/`)) {
+      return permission;
+    }
+  }
+  return null;
 }
 
 export const middleware = auth((req) => {
@@ -36,13 +43,25 @@ export const middleware = auth((req) => {
     return Response.redirect(new URL('/acceso-denegado', req.nextUrl.origin));
   }
 
-  // Role-based routing: non-admin users cannot access admin-only routes
-  if (
-    req.auth &&
-    req.auth.user?.role !== 'admin' &&
-    isAdminOnlyRoute(pathname)
-  ) {
-    return Response.redirect(new URL('/', req.nextUrl.origin));
+  // Permission-based routing: check required permission for each route
+  const requiredPermission = getRequiredPermission(pathname);
+  if (requiredPermission && req.auth) {
+    const permissions = req.auth.user?.permissions;
+
+    // Development verification (catch serialization issues early)
+    if (
+      process.env.NODE_ENV === 'development' &&
+      req.auth.user &&
+      !permissions
+    ) {
+      console.warn(
+        '[middleware] WARNING: User authenticated but permissions undefined -- check auth.ts JWT/session callbacks',
+      );
+    }
+
+    if (!permissions || !permissions[requiredPermission]) {
+      return Response.redirect(new URL('/', req.nextUrl.origin));
+    }
   }
 });
 
