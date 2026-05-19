@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Plus } from 'lucide-react';
+import { Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -38,6 +38,8 @@ import {
 import { apiClientFetch } from '@/lib/api-client';
 import { formatDate } from '@/lib/formatters';
 import type { RoleOption } from '@/types/role';
+import { EditUserDialog } from './EditUserDialog';
+import { DeleteUserAlertDialog } from './DeleteUserAlertDialog';
 
 interface UserRow {
   id: string;
@@ -68,7 +70,8 @@ export function UsersClient({ users, roles }: UsersClientProps): ReactElement {
   const currentUserId = session?.user?.id;
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [editTarget, setEditTarget] = useState<UserRow | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<UserRow | null>(null);
 
   const {
     register,
@@ -104,23 +107,6 @@ export function UsersClient({ users, roles }: UsersClientProps): ReactElement {
       toast.error(
         error instanceof Error ? error.message : 'Error al crear usuario',
       );
-    }
-  }
-
-  async function handleToggleStatus(user: UserRow): Promise<void> {
-    setTogglingId(user.id);
-    try {
-      await apiClientFetch(`/api/users/${user.id}/toggle-status`, token, {
-        method: 'PATCH',
-      });
-      toast.success(`Usuario ${user.isActive ? 'desactivado' : 'activado'}`);
-      router.refresh();
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Error al cambiar estado',
-      );
-    } finally {
-      setTogglingId(null);
     }
   }
 
@@ -181,23 +167,31 @@ export function UsersClient({ users, roles }: UsersClientProps): ReactElement {
                     {formatDate(user.createdAt)}
                   </TableCell>
                   <TableCell>
-                    {user.id === currentUserId ? (
-                      <span className='text-muted-foreground text-xs'>
-                        (tu cuenta)
-                      </span>
-                    ) : (
+                    <div className='flex items-center justify-end gap-2'>
                       <Button
                         size='sm'
                         variant='outline'
-                        onClick={() => void handleToggleStatus(user)}
-                        disabled={togglingId === user.id}
+                        onClick={() => setEditTarget(user)}
                       >
-                        {togglingId === user.id ? (
-                          <Loader2 className='mr-1 size-3 animate-spin' />
-                        ) : null}
-                        {user.isActive ? 'Desactivar' : 'Activar'}
+                        <Pencil className='mr-1 size-3' />
+                        Editar
                       </Button>
-                    )}
+                      {user.id === currentUserId ? (
+                        <span className='text-muted-foreground text-xs'>
+                          (tu cuenta)
+                        </span>
+                      ) : (
+                        <Button
+                          size='sm'
+                          variant='outline'
+                          className='text-destructive hover:text-destructive'
+                          onClick={() => setDeleteTarget(user)}
+                        >
+                          <Trash2 className='mr-1 size-3' />
+                          Borrar
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -292,6 +286,31 @@ export function UsersClient({ users, roles }: UsersClientProps): ReactElement {
           </form>
         </DialogContent>
       </Dialog>
+
+      <EditUserDialog
+        user={editTarget}
+        open={editTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditTarget(null);
+        }}
+        roles={roles}
+        isOwnRow={editTarget?.id === currentUserId}
+        onSuccess={() => {
+          setEditTarget(null);
+          router.refresh();
+        }}
+      />
+      <DeleteUserAlertDialog
+        user={deleteTarget}
+        open={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+        onSuccess={() => {
+          setDeleteTarget(null);
+          router.refresh();
+        }}
+      />
     </>
   );
 }
