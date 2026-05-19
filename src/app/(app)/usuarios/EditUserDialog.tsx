@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactElement } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -73,6 +73,15 @@ export function EditUserDialog({
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
 
+  const formValues = useMemo<EditUserFormData>(
+    () => ({
+      name: user?.name ?? '',
+      roleId: user?.role.id ?? '',
+      isActive: user?.isActive ?? true,
+    }),
+    [user],
+  );
+
   const {
     register,
     handleSubmit,
@@ -82,22 +91,18 @@ export function EditUserDialog({
     formState: { errors, isSubmitting },
   } = useForm<EditUserFormData>({
     resolver: zodResolver(editUserSchema),
-    defaultValues: {
-      name: '',
-      roleId: '',
-      isActive: true,
-    },
+    values: formValues,
   });
 
+  // Defensive: ensure form resets when the target user changes (e.g. dialog
+  // re-opened with a different row). `values` should keep this in sync, but
+  // calling reset explicitly avoids any stale watch() values in tests where
+  // jsdom + RHF timing can desync.
   useEffect(() => {
     if (user) {
-      reset({
-        name: user.name ?? '',
-        roleId: user.role.id,
-        isActive: user.isActive,
-      });
+      reset(formValues);
     }
-  }, [user, reset]);
+  }, [user, reset, formValues]);
 
   if (!user) {
     return null;
