@@ -221,10 +221,12 @@ export function ScenarioEditorClient({
             Limpiar overrides
           </Button>
         </div>
-        <Button onClick={handleSaveAndCalculate} disabled={saving}>
-          {saving ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
-          Guardar y calcular
-        </Button>
+        {isOwner && (
+          <Button onClick={handleSaveAndCalculate} disabled={saving}>
+            {saving ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
+            Guardar y calcular
+          </Button>
+        )}
       </div>
 
       {/* Product Override Table */}
