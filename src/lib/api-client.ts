@@ -39,8 +39,11 @@ export async function apiClientFetch<T>(
   // Without this guard, res.json() throws SyntaxError on empty body and the
   // caller sees a misleading "Unexpected end of JSON input" toast even
   // though the request succeeded server-side (typical for DELETE endpoints
-  // annotated with @HttpCode(204) in the Nest backend).
-  if (res.status === 204 || res.headers.get('content-length') === '0') {
+  // annotated with @HttpCode(204) in the Nest backend). Defensive on
+  // `res.headers` because test mocks (legacy) may omit it; optional-chain
+  // and treat missing headers as "no content-length signal".
+  const contentLength = res.headers?.get('content-length') ?? null;
+  if (res.status === 204 || contentLength === '0') {
     return undefined as T;
   }
 
