@@ -182,7 +182,7 @@ describe('ScenarioEditorClient', () => {
         user: {
           id: '99999999-9999-4999-8999-999999999999',
           email: 'other@nemea.com',
-          permissions: {},
+          permissions: { canManageUsers: false },
         },
         accessToken: 'fake-token',
       },

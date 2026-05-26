@@ -19,7 +19,9 @@ import { render, screen } from '@testing-library/react';
 import { auth } from '@/auth';
 import Home from '../page';
 
-const mockAuth = auth as jest.MockedFunction<typeof auth>;
+// NextAuth's `auth` is an overloaded callable (handler + middleware), so
+// jest.MockedFunction collapses its param to `never`. Cast to a plain mock.
+const mockAuth = auth as unknown as jest.Mock;
 
 describe('Home page', () => {
   it('renders permission cards for admin user', async () => {
@@ -32,7 +34,7 @@ describe('Home page', () => {
           canViewExpenses: true,
         },
       },
-    } as Awaited<ReturnType<typeof auth>>);
+    });
 
     render(await Home());
 
@@ -52,7 +54,7 @@ describe('Home page', () => {
           canViewExpenses: false,
         },
       },
-    } as Awaited<ReturnType<typeof auth>>);
+    });
 
     render(await Home());
 
@@ -72,7 +74,7 @@ describe('Home page', () => {
           canViewExpenses: false,
         },
       },
-    } as Awaited<ReturnType<typeof auth>>);
+    });
 
     render(await Home());
 
