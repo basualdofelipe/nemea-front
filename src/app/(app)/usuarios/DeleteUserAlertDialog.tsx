@@ -75,8 +75,9 @@ export function DeleteUserAlertDialog({
           <AlertDialogDescription>
             Se eliminará el usuario <strong>{user.email}</strong>. Sus
             escenarios serán transferidos a tu cuenta con el sufijo &quot; -{' '}
-            {user.name ?? 'usuario borrado'}&quot;. Esta acción no se puede
-            deshacer.
+            {(user.name?.trim() ? user.name.trim() : 'usuario borrado') +
+              ` #${user.id.slice(0, 8)}`}
+            &quot;. Esta acción no se puede deshacer.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
