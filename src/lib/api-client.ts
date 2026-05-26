@@ -35,5 +35,14 @@ export async function apiClientFetch<T>(
     throw new Error(error.message ?? `API error: ${res.status}`);
   }
 
+  // 204 No Content (or any response without a body) has no JSON to parse.
+  // Without this guard, res.json() throws SyntaxError on empty body and the
+  // caller sees a misleading "Unexpected end of JSON input" toast even
+  // though the request succeeded server-side (typical for DELETE endpoints
+  // annotated with @HttpCode(204) in the Nest backend).
+  if (res.status === 204 || res.headers.get('content-length') === '0') {
+    return undefined as T;
+  }
+
   return res.json() as Promise<T>;
 }
