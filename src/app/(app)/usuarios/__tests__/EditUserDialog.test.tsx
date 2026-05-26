@@ -49,10 +49,15 @@ const mockRoles = [
 
 describe('EditUserDialog', () => {
   beforeEach(() => {
+    // IN-A5: include `headers` in the mock response. apiClientFetch now
+    // reads `res.headers.get('content-length')` without an optional chain
+    // (the native Response always has headers; the chain only existed to
+    // tolerate legacy mocks). Tests must supply a real Headers instance.
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
         status: 200,
+        headers: new Headers({ 'content-length': '100' }),
         json: () => Promise.resolve({ data: { ...mockUser, name: 'Nuevo' } }),
       }),
     ) as jest.Mock;
@@ -141,6 +146,7 @@ describe('EditUserDialog', () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 400,
+      headers: new Headers(),
       json: () =>
         Promise.resolve({ message: 'No puedes cambiar tu propio rol' }),
     });

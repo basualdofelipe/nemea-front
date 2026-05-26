@@ -39,10 +39,14 @@ export async function apiClientFetch<T>(
   // Without this guard, res.json() throws SyntaxError on empty body and the
   // caller sees a misleading "Unexpected end of JSON input" toast even
   // though the request succeeded server-side (typical for DELETE endpoints
-  // annotated with @HttpCode(204) in the Nest backend). Defensive on
-  // `res.headers` because test mocks (legacy) may omit it; optional-chain
-  // and treat missing headers as "no content-length signal".
-  const contentLength = res.headers?.get('content-length') ?? null;
+  // annotated with @HttpCode(204) in the Nest backend).
+  //
+  // IN-A5: the native Response always exposes `headers` as a non-nullable
+  // Headers getter, so the previous optional-chain (res.headers?.get(...))
+  // was dead defensive code that existed only to humor legacy test mocks
+  // that omitted the headers field. Tests are now responsible for using
+  // `new Response(null, { status: 204 })` or `headers: new Headers()`.
+  const contentLength = res.headers.get('content-length');
   if (res.status === 204 || contentLength === '0') {
     return undefined as T;
   }

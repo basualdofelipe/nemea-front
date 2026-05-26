@@ -42,10 +42,15 @@ const mockUser = {
 
 describe('DeleteUserAlertDialog', () => {
   beforeEach(() => {
+    // IN-A5: include `headers` in the mock response. apiClientFetch now
+    // reads `res.headers.get('content-length')` without an optional chain
+    // (the native Response always has headers; the chain only existed to
+    // tolerate legacy mocks). Tests must supply a real Headers instance.
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
         status: 204,
+        headers: new Headers(),
         json: () => Promise.resolve({}),
       }),
     ) as jest.Mock;
@@ -126,6 +131,7 @@ describe('DeleteUserAlertDialog', () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 400,
+      headers: new Headers(),
       json: () =>
         Promise.resolve({
           message: 'No se puede dejar el sistema sin administradores activos',
