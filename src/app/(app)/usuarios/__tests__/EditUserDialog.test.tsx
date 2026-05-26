@@ -3,18 +3,20 @@ import userEvent, {
   PointerEventsCheckLevel,
 } from '@testing-library/user-event';
 
-jest.mock('next-auth/react', () => ({
-  useSession: jest.fn(() => ({
-    data: {
-      user: {
-        id: 'caller-uuid',
-        email: 'admin@nemea.com',
-        permissions: { canManageUsers: true },
-      },
-      accessToken: 'fake-token',
+const mockUseSession = jest.fn(() => ({
+  data: {
+    user: {
+      id: 'caller-uuid',
+      email: 'admin@nemea.com',
+      permissions: { canManageUsers: true },
     },
-    status: 'authenticated',
-  })),
+    accessToken: 'fake-token',
+  },
+  status: 'authenticated' as const,
+}));
+
+jest.mock('next-auth/react', () => ({
+  useSession: (): unknown => mockUseSession(),
 }));
 
 jest.mock('next/navigation', () => ({
@@ -62,6 +64,19 @@ describe('EditUserDialog', () => {
       }),
     ) as jest.Mock;
     jest.clearAllMocks();
+    // IN-A6: tests can override the session via mockReturnValue. Reset to
+    // the authenticated default here so per-test overrides don't bleed.
+    mockUseSession.mockReturnValue({
+      data: {
+        user: {
+          id: 'caller-uuid',
+          email: 'admin@nemea.com',
+          permissions: { canManageUsers: true },
+        },
+        accessToken: 'fake-token',
+      },
+      status: 'authenticated' as const,
+    });
   });
 
   it('renders prefilled with current values', () => {
@@ -223,5 +238,84 @@ describe('EditUserDialog', () => {
       expect(screen.getByDisplayValue('Maria')).toBeInTheDocument();
     });
     expect(screen.getByDisplayValue('other@nemea.com')).toBeInTheDocument();
+  });
+
+  // IN-A6: pin the dialog's behavior when the session is still loading.
+  // The component does NOT short-circuit on status=loading; it falls back
+  // to an empty token and sends the PATCH anyway, letting apiClientFetch
+  // handle the 401 (redirect to /login). Documented so a future refactor
+  // doesn't silently change this contract.
+  it('IN-A6: con status=loading manda el PATCH con token vacio', async () => {
+    mockUseSession.mockReturnValue({
+      data: null as unknown as ReturnType<typeof mockUseSession>['data'],
+      status: 'loading' as unknown as 'authenticated',
+    });
+
+    const user = userEvent.setup({
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    });
+    render(
+      <EditUserDialog
+        user={mockUser}
+        open={true}
+        onOpenChange={jest.fn()}
+        roles={mockRoles}
+        isOwnRow={false}
+        onSuccess={jest.fn()}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Juan')).toBeInTheDocument();
+    });
+
+    const nameInput = screen.getByLabelText(/Nombre/i);
+    await user.clear(nameInput);
+    await user.type(nameInput, 'Nuevo');
+
+    fireEvent.click(screen.getByRole('button', { name: /Guardar/i }));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+    const fetchArg = (global.fetch as jest.Mock).mock.calls[0][1];
+    expect(fetchArg.headers.Authorization).toBe('Bearer ');
+  });
+
+  it('IN-A6: con status=unauthenticated tambien manda el PATCH con token vacio', async () => {
+    mockUseSession.mockReturnValue({
+      data: null as unknown as ReturnType<typeof mockUseSession>['data'],
+      status: 'unauthenticated' as unknown as 'authenticated',
+    });
+
+    const user = userEvent.setup({
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    });
+    render(
+      <EditUserDialog
+        user={mockUser}
+        open={true}
+        onOpenChange={jest.fn()}
+        roles={mockRoles}
+        isOwnRow={false}
+        onSuccess={jest.fn()}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('Juan')).toBeInTheDocument();
+    });
+
+    const nameInput = screen.getByLabelText(/Nombre/i);
+    await user.clear(nameInput);
+    await user.type(nameInput, 'Otro');
+
+    fireEvent.click(screen.getByRole('button', { name: /Guardar/i }));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+    const fetchArg = (global.fetch as jest.Mock).mock.calls[0][1];
+    expect(fetchArg.headers.Authorization).toBe('Bearer ');
   });
 });

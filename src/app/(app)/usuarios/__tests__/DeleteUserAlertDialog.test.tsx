@@ -3,18 +3,20 @@ import userEvent, {
   PointerEventsCheckLevel,
 } from '@testing-library/user-event';
 
-jest.mock('next-auth/react', () => ({
-  useSession: jest.fn(() => ({
-    data: {
-      user: {
-        id: 'caller-uuid',
-        email: 'admin@nemea.com',
-        permissions: { canManageUsers: true },
-      },
-      accessToken: 'fake-token',
+const mockUseSession = jest.fn(() => ({
+  data: {
+    user: {
+      id: 'caller-uuid',
+      email: 'admin@nemea.com',
+      permissions: { canManageUsers: true },
     },
-    status: 'authenticated',
-  })),
+    accessToken: 'fake-token',
+  },
+  status: 'authenticated' as const,
+}));
+
+jest.mock('next-auth/react', () => ({
+  useSession: (): unknown => mockUseSession(),
 }));
 
 jest.mock('next/navigation', () => ({
@@ -55,6 +57,19 @@ describe('DeleteUserAlertDialog', () => {
       }),
     ) as jest.Mock;
     jest.clearAllMocks();
+    // IN-A6: tests can override the session via mockReturnValue. Reset to
+    // the authenticated default here so per-test overrides don't bleed.
+    mockUseSession.mockReturnValue({
+      data: {
+        user: {
+          id: 'caller-uuid',
+          email: 'admin@nemea.com',
+          permissions: { canManageUsers: true },
+        },
+        accessToken: 'fake-token',
+      },
+      status: 'authenticated' as const,
+    });
   });
 
   it('renders rename preview copy with email and name', () => {
@@ -156,5 +171,65 @@ describe('DeleteUserAlertDialog', () => {
       );
     });
     expect(onSuccess).not.toHaveBeenCalled();
+  });
+
+  // IN-A6: document the dialog's behavior when the session is still
+  // loading or the user is unauthenticated. The component does NOT
+  // short-circuit -- it falls back to an empty token, sends the request
+  // anyway, and lets apiClientFetch handle the 401 (redirect to /login).
+  // These tests pin that contract so a future refactor doesn't silently
+  // change it without surfacing the decision.
+  it('IN-A6: con status=loading manda el request con token vacio (apiClientFetch maneja el 401)', async () => {
+    mockUseSession.mockReturnValue({
+      data: null as unknown as ReturnType<typeof mockUseSession>['data'],
+      status: 'loading' as unknown as 'authenticated',
+    });
+
+    render(
+      <DeleteUserAlertDialog
+        user={mockUser}
+        open={true}
+        onOpenChange={jest.fn()}
+        onSuccess={jest.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Borrar usuario/i }));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.stringContaining(`/api/users/${VICTIM_ID}`),
+        expect.objectContaining({
+          method: 'DELETE',
+          headers: expect.objectContaining({
+            Authorization: 'Bearer ',
+          }),
+        }),
+      );
+    });
+  });
+
+  it('IN-A6: con status=unauthenticated tambien manda el request con token vacio', async () => {
+    mockUseSession.mockReturnValue({
+      data: null as unknown as ReturnType<typeof mockUseSession>['data'],
+      status: 'unauthenticated' as unknown as 'authenticated',
+    });
+
+    render(
+      <DeleteUserAlertDialog
+        user={mockUser}
+        open={true}
+        onOpenChange={jest.fn()}
+        onSuccess={jest.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Borrar usuario/i }));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+    const fetchArg = (global.fetch as jest.Mock).mock.calls[0][1];
+    expect(fetchArg.headers.Authorization).toBe('Bearer ');
   });
 });
