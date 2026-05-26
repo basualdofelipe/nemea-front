@@ -22,7 +22,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('sonner', () => ({
-  toast: { success: jest.fn(), error: jest.fn() },
+  toast: { success: jest.fn(), error: jest.fn(), info: jest.fn() },
 }));
 
 import { toast } from 'sonner';

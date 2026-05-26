@@ -45,6 +45,37 @@ interface UserRow {
   createdAt: string;
 }
 
+// WR-09: De-duplicate the Tooltip-around-disabled-control idiom. Radix does
+// not emit pointer events on disabled controls, so the Tooltip needs a
+// focusable <span> wrapper; that forces two render branches per control
+// (one wrapped, one bare). Extracting this helper keeps the control props
+// defined exactly once.
+interface DisabledTooltipProps {
+  children: ReactElement;
+  when: boolean;
+  label: string;
+}
+
+function DisabledTooltip({
+  children,
+  when,
+  label,
+}: DisabledTooltipProps): ReactElement {
+  if (!when) return children;
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span tabIndex={0} className='block'>
+            {children}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>{label}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
 const editUserSchema = z.object({
   name: z.string().max(255).optional().or(z.literal('')),
   roleId: z.string().uuid('Selecciona un rol'),
@@ -73,10 +104,12 @@ export function EditUserDialog({
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
 
+  // WR-05: optional-chain user.role to mirror the backend's null-safe role
+  // handling (CR-01). Otherwise a user without a role explodes on dialog open.
   const formValues = useMemo<EditUserFormData>(
     () => ({
       name: user?.name ?? '',
-      roleId: user?.role.id ?? '',
+      roleId: user?.role?.id ?? '',
       isActive: user?.isActive ?? true,
     }),
     [user],
@@ -122,11 +155,27 @@ export function EditUserDialog({
     if (normalizedNext !== currentName) {
       dto.name = normalizedNext;
     }
-    if (data.roleId !== user.role.id) {
+    // WR-05: defensive guard. If roleId is somehow empty (no roles loaded,
+    // race condition) the zod resolver should have blocked the submit, but
+    // a fast-fail keeps the user from seeing an opaque backend error.
+    if (!data.roleId) {
+      toast.error('Falta el rol');
+      return;
+    }
+    if (data.roleId !== user.role?.id) {
       dto.roleId = data.roleId;
     }
     if (data.isActive !== user.isActive) {
       dto.isActive = data.isActive;
+    }
+
+    // WR-04: short-circuit no-op PATCH. If the admin opens the dialog and
+    // clicks Save without touching anything, dto is {} -- avoid the wasted
+    // round-trip and the misleading "Usuario actualizado" toast.
+    if (Object.keys(dto).length === 0) {
+      toast.info('No hay cambios para guardar');
+      onOpenChange(false);
+      return;
     }
 
     try {
@@ -186,37 +235,10 @@ export function EditUserDialog({
 
           <div className='space-y-2'>
             <Label htmlFor='edit-user-role'>Rol</Label>
-            {isOwnRow ? (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span tabIndex={0} className='block'>
-                      <Select
-                        value={watch('roleId')}
-                        onValueChange={(value) =>
-                          setValue('roleId', value, { shouldValidate: true })
-                        }
-                        disabled={isOwnRow || isSubmitting}
-                      >
-                        <SelectTrigger id='edit-user-role' className='w-full'>
-                          <SelectValue placeholder='Selecciona un rol' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {roles.map((role) => (
-                            <SelectItem key={role.id} value={role.id}>
-                              {role.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    No puedes cambiar tu propio rol
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ) : (
+            <DisabledTooltip
+              when={isOwnRow}
+              label='No puedes cambiar tu propio rol'
+            >
               <Select
                 value={watch('roleId')}
                 onValueChange={(value) =>
@@ -235,7 +257,7 @@ export function EditUserDialog({
                   ))}
                 </SelectContent>
               </Select>
-            )}
+            </DisabledTooltip>
             {errors.roleId && (
               <p className='text-destructive text-sm'>
                 {errors.roleId.message}
@@ -245,27 +267,10 @@ export function EditUserDialog({
 
           <div className='flex items-center justify-between'>
             <Label htmlFor='edit-user-active'>Activo</Label>
-            {isOwnRow ? (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span tabIndex={0}>
-                      <Switch
-                        id='edit-user-active'
-                        checked={watch('isActive')}
-                        onCheckedChange={(value) =>
-                          setValue('isActive', value, { shouldDirty: true })
-                        }
-                        disabled={isOwnRow || isSubmitting}
-                      />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    No puedes cambiar tu propio estado
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ) : (
+            <DisabledTooltip
+              when={isOwnRow}
+              label='No puedes cambiar tu propio estado'
+            >
               <Switch
                 id='edit-user-active'
                 checked={watch('isActive')}
@@ -274,7 +279,7 @@ export function EditUserDialog({
                 }
                 disabled={isOwnRow || isSubmitting}
               />
-            )}
+            </DisabledTooltip>
           </div>
 
           <DialogFooter>
