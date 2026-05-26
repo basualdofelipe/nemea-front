@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import type { TiendanubeConfigAll } from '@/components/tiendanube-config/types';
 import { PAYMENT_METHOD_LABELS } from '@/components/tiendanube-config/types';
+import { TN_PLAN_ESENCIAL } from '@/constants/tiendanube';
 
 export interface GatewayConfig {
   gatewaySlug: string;
@@ -27,7 +28,7 @@ interface GatewaySelectorsProps {
   onConfigChange: (config: GatewayConfig) => void;
 }
 
-const DEFAULT_PLAN_SLUG = 'esencial';
+const DEFAULT_PLAN_SLUG = TN_PLAN_ESENCIAL;
 
 export function GatewaySelectors({
   config,

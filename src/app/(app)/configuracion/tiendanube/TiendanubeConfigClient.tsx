@@ -26,6 +26,7 @@ import type {
   TnGatewayRate,
   TnPlan,
 } from '@/components/tiendanube-config/types';
+import { TN_PLAN_ESENCIAL } from '@/constants/tiendanube';
 
 interface TiendanubeConfigClientProps {
   config: TiendanubeConfigAll;
@@ -35,7 +36,7 @@ export function TiendanubeConfigClient({
   config,
 }: TiendanubeConfigClientProps): ReactElement {
   const defaultPlan =
-    config.plans.find((p) => p.slug === 'esencial') ?? config.plans[0];
+    config.plans.find((p) => p.slug === TN_PLAN_ESENCIAL) ?? config.plans[0];
 
   const [selectedPlan, setSelectedPlan] = useState<TnPlan>(defaultPlan);
   const [plans, setPlans] = useState<TnPlan[]>(config.plans);
