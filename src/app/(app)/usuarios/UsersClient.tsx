@@ -294,7 +294,7 @@ export function UsersClient({ users, roles }: UsersClientProps): ReactElement {
           if (!open) setEditTarget(null);
         }}
         roles={roles}
-        isOwnRow={editTarget?.id === currentUserId}
+        isOwnRow={Boolean(currentUserId) && editTarget?.id === currentUserId}
         onSuccess={() => {
           setEditTarget(null);
           router.refresh();
