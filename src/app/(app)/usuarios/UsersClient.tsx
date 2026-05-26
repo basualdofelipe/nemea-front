@@ -168,6 +168,15 @@ export function UsersClient({ users, roles }: UsersClientProps): ReactElement {
                   </TableCell>
                   <TableCell>
                     <div className='flex items-center justify-end gap-2'>
+                      {/* IN-A2: SPEC line "Editar disabled or hidden on own
+                          row only for role" is literally ambiguous. We
+                          render Editar unconditionally because the only
+                          field actually disabled on the own row is the
+                          role Select (and the Active Switch) -- the name
+                          stays editable. Disabling the whole button would
+                          stop admins from changing their own name. The
+                          per-control disable happens inside EditUserDialog
+                          via the DisabledTooltip helper (WR-09). */}
                       <Button
                         size='sm'
                         variant='outline'
