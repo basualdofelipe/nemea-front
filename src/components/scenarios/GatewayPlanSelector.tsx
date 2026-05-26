@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import type { TiendanubeConfigAll } from '@/components/tiendanube-config/types';
 import { PAYMENT_METHOD_LABELS } from '@/components/tiendanube-config/types';
+import { TN_PAYMENT_TARJETA } from '@/constants/tiendanube';
 import type { GatewayPlanConfig } from './types';
 
 interface GatewayPlanSelectorProps {
@@ -80,7 +81,7 @@ export function GatewayPlanSelector({
       (r) => r.gateway.slug === newSlug,
     );
     const methods = [...new Set(availableRates.map((r) => r.paymentMethod))];
-    const newMethod = methods[0] ?? 'tarjeta_debito_credito';
+    const newMethod = methods[0] ?? TN_PAYMENT_TARJETA;
     const dayOptions = availableRates
       .filter((r) => r.paymentMethod === newMethod)
       .map((r) => r.withdrawalDays);
