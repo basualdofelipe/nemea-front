@@ -9,7 +9,11 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { apiClientFetch } from '@/lib/api-client';
-import { TN_GATEWAY_PAGO_NUBE, TN_PLAN_ESENCIAL } from '@/constants/tiendanube';
+import {
+  TN_GATEWAY_PAGO_NUBE,
+  TN_PAYMENT_TARJETA,
+  TN_PLAN_ESENCIAL,
+} from '@/constants/tiendanube';
 import type { Product } from '@/components/products/types';
 import type { TiendanubeConfigAll } from '@/components/tiendanube-config/types';
 import type {
@@ -53,7 +57,7 @@ export function ScenarioEditorClient({
   const [gatewayPlanConfig, setGatewayPlanConfig] = useState<GatewayPlanConfig>(
     {
       gatewaySlug: scenario.gatewaySlug ?? TN_GATEWAY_PAGO_NUBE,
-      paymentMethod: scenario.paymentMethod ?? 'tarjeta_debito_credito',
+      paymentMethod: scenario.paymentMethod ?? TN_PAYMENT_TARJETA,
       withdrawalDays: scenario.withdrawalDays ?? 1,
       installments: scenario.installments ?? 1,
       planId:
