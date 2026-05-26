@@ -45,7 +45,7 @@ interface UserRow {
   createdAt: string;
 }
 
-// WR-09: De-duplicate the Tooltip-around-disabled-control idiom. Radix does
+// De-duplicate the Tooltip-around-disabled-control idiom. Radix does
 // not emit pointer events on disabled controls, so the Tooltip needs a
 // focusable <span> wrapper; that forces two render branches per control
 // (one wrapped, one bare). Extracting this helper keeps the control props
@@ -104,8 +104,8 @@ export function EditUserDialog({
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
 
-  // WR-05: optional-chain user.role to mirror the backend's null-safe role
-  // handling (CR-01). Otherwise a user without a role explodes on dialog open.
+  // Optional-chain user.role to mirror the backend's null-safe role
+  // handling. Otherwise a user without a role explodes on dialog open.
   const formValues = useMemo<EditUserFormData>(
     () => ({
       name: user?.name ?? '',
@@ -155,7 +155,7 @@ export function EditUserDialog({
     if (normalizedNext !== currentName) {
       dto.name = normalizedNext;
     }
-    // WR-05: defensive guard. If roleId is somehow empty (no roles loaded,
+    // Defensive guard. If roleId is somehow empty (no roles loaded,
     // race condition) the zod resolver should have blocked the submit, but
     // a fast-fail keeps the user from seeing an opaque backend error.
     if (!data.roleId) {
@@ -169,7 +169,7 @@ export function EditUserDialog({
       dto.isActive = data.isActive;
     }
 
-    // WR-04: short-circuit no-op PATCH. If the admin opens the dialog and
+    // Short-circuit no-op PATCH. If the admin opens the dialog and
     // clicks Save without touching anything, dto is {} -- avoid the wasted
     // round-trip and the misleading "Usuario actualizado" toast.
     if (Object.keys(dto).length === 0) {

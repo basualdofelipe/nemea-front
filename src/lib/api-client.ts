@@ -41,7 +41,7 @@ export async function apiClientFetch<T>(
   // though the request succeeded server-side (typical for DELETE endpoints
   // annotated with @HttpCode(204) in the Nest backend).
   //
-  // IN-A5: the native Response always exposes `headers` as a non-nullable
+  // The native Response always exposes `headers` as a non-nullable
   // Headers getter, so the previous optional-chain (res.headers?.get(...))
   // was dead defensive code that existed only to humor legacy test mocks
   // that omitted the headers field. Tests are now responsible for using

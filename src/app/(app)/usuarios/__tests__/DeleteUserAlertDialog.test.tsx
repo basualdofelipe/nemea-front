@@ -44,10 +44,9 @@ const mockUser = {
 
 describe('DeleteUserAlertDialog', () => {
   beforeEach(() => {
-    // IN-A5: include `headers` in the mock response. apiClientFetch now
-    // reads `res.headers.get('content-length')` without an optional chain
-    // (the native Response always has headers; the chain only existed to
-    // tolerate legacy mocks). Tests must supply a real Headers instance.
+    // Include `headers` in the mock response. apiClientFetch reads
+    // `res.headers.get('content-length')` without an optional chain
+    // (the native Response always has headers). Tests must supply a real Headers instance.
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -57,7 +56,7 @@ describe('DeleteUserAlertDialog', () => {
       }),
     ) as jest.Mock;
     jest.clearAllMocks();
-    // IN-A6: tests can override the session via mockReturnValue. Reset to
+    // Tests can override the session via mockReturnValue. Reset to
     // the authenticated default here so per-test overrides don't bleed.
     mockUseSession.mockReturnValue({
       data: {
@@ -173,13 +172,13 @@ describe('DeleteUserAlertDialog', () => {
     expect(onSuccess).not.toHaveBeenCalled();
   });
 
-  // IN-A6: document the dialog's behavior when the session is still
+  // Document the dialog's behavior when the session is still
   // loading or the user is unauthenticated. The component does NOT
   // short-circuit -- it falls back to an empty token, sends the request
   // anyway, and lets apiClientFetch handle the 401 (redirect to /login).
   // These tests pin that contract so a future refactor doesn't silently
   // change it without surfacing the decision.
-  it('IN-A6: con status=loading manda el request con token vacio (apiClientFetch maneja el 401)', async () => {
+  it('con status=loading manda el request con token vacio (apiClientFetch maneja el 401)', async () => {
     mockUseSession.mockReturnValue({
       data: null as unknown as ReturnType<typeof mockUseSession>['data'],
       status: 'loading' as unknown as 'authenticated',
@@ -209,7 +208,7 @@ describe('DeleteUserAlertDialog', () => {
     });
   });
 
-  it('IN-A6: con status=unauthenticated tambien manda el request con token vacio', async () => {
+  it('con status=unauthenticated tambien manda el request con token vacio', async () => {
     mockUseSession.mockReturnValue({
       data: null as unknown as ReturnType<typeof mockUseSession>['data'],
       status: 'unauthenticated' as unknown as 'authenticated',

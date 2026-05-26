@@ -51,10 +51,9 @@ const mockRoles = [
 
 describe('EditUserDialog', () => {
   beforeEach(() => {
-    // IN-A5: include `headers` in the mock response. apiClientFetch now
-    // reads `res.headers.get('content-length')` without an optional chain
-    // (the native Response always has headers; the chain only existed to
-    // tolerate legacy mocks). Tests must supply a real Headers instance.
+    // Include `headers` in the mock response. apiClientFetch reads
+    // `res.headers.get('content-length')` without an optional chain
+    // (the native Response always has headers). Tests must supply a real Headers instance.
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
@@ -64,7 +63,7 @@ describe('EditUserDialog', () => {
       }),
     ) as jest.Mock;
     jest.clearAllMocks();
-    // IN-A6: tests can override the session via mockReturnValue. Reset to
+    // Tests can override the session via mockReturnValue. Reset to
     // the authenticated default here so per-test overrides don't bleed.
     mockUseSession.mockReturnValue({
       data: {
@@ -240,12 +239,12 @@ describe('EditUserDialog', () => {
     expect(screen.getByDisplayValue('other@nemea.com')).toBeInTheDocument();
   });
 
-  // IN-A6: pin the dialog's behavior when the session is still loading.
+  // Pin the dialog's behavior when the session is still loading.
   // The component does NOT short-circuit on status=loading; it falls back
   // to an empty token and sends the PATCH anyway, letting apiClientFetch
   // handle the 401 (redirect to /login). Documented so a future refactor
   // doesn't silently change this contract.
-  it('IN-A6: con status=loading manda el PATCH con token vacio', async () => {
+  it('con status=loading manda el PATCH con token vacio', async () => {
     mockUseSession.mockReturnValue({
       data: null as unknown as ReturnType<typeof mockUseSession>['data'],
       status: 'loading' as unknown as 'authenticated',
@@ -282,7 +281,7 @@ describe('EditUserDialog', () => {
     expect(fetchArg.headers.Authorization).toBe('Bearer ');
   });
 
-  it('IN-A6: con status=unauthenticated tambien manda el PATCH con token vacio', async () => {
+  it('con status=unauthenticated tambien manda el PATCH con token vacio', async () => {
     mockUseSession.mockReturnValue({
       data: null as unknown as ReturnType<typeof mockUseSession>['data'],
       status: 'unauthenticated' as unknown as 'authenticated',
