@@ -112,9 +112,15 @@ export function EditUserDialog({
     if (!user) return;
 
     const dto: Record<string, unknown> = {};
-    const nextName = data.name ?? '';
-    if (nextName !== (user.name ?? '')) {
-      dto.name = nextName;
+    // Trim and normalize empty string to null so the backend delete suffix
+    // ('usuario borrado' fallback) fires correctly when the admin clears the
+    // name. Backend also has a defensive trim, but normalizing here keeps the
+    // DB clean (no rows with name='' floating around).
+    const trimmedNext = (data.name ?? '').trim();
+    const normalizedNext = trimmedNext === '' ? null : trimmedNext;
+    const currentName = user.name ?? null;
+    if (normalizedNext !== currentName) {
+      dto.name = normalizedNext;
     }
     if (data.roleId !== user.role.id) {
       dto.roleId = data.roleId;
