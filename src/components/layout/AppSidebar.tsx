@@ -83,7 +83,7 @@ export function AppSidebar(): ReactElement {
             alt='NEMEA'
             width={100}
             height={100}
-            className='h-8 w-auto object-contain group-data-[collapsible=icon]:hidden'
+            className='h-12 w-auto object-contain group-data-[collapsible=icon]:hidden'
           />
           <Image
             src='/brand/Isotipo.png'

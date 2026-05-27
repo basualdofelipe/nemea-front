@@ -6,6 +6,9 @@ const nextConfig = {
         ? { exclude: ['error', 'warn'] }
         : false,
   },
+  images: {
+    unoptimized: true,
+  },
   reactStrictMode: true,
   turbopack: {},
   webpack(config, { dev }) {
