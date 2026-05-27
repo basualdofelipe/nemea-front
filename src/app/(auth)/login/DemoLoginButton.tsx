@@ -1,25 +1,48 @@
-import type { ReactElement } from 'react';
-import { signIn } from '@/auth';
+'use client';
+
+import { useState, type ReactElement } from 'react';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 
 const DEMO_EMAIL = 'demo@nemea.app';
 
 export function DemoLoginButton(): ReactElement {
+  const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
+
   async function handleDemoLogin(): Promise<void> {
-    'use server';
-    await signIn('credentials', { email: DEMO_EMAIL, redirectTo: '/' });
+    setIsPending(true);
+    // Client-side signIn (next-auth/react) updates the SessionProvider session
+    // directly, so the sidebar (client usePermissions -> useSession) populates
+    // after one click without a hard reload. We avoid the auto-redirect and
+    // navigate ourselves once the session is in place.
+    const result = await signIn('credentials', {
+      email: DEMO_EMAIL,
+      redirect: false,
+    });
+
+    if (result?.error !== undefined && result.error !== null) {
+      setIsPending(false);
+      return;
+    }
+
+    router.push('/');
+    router.refresh();
   }
 
   return (
-    <form action={handleDemoLogin}>
-      <Button
-        type='submit'
-        variant='outline'
-        size='lg'
-        className='w-full gap-3'
-      >
-        Entrar como demo
-      </Button>
-    </form>
+    <Button
+      type='button'
+      variant='outline'
+      size='lg'
+      className='w-full gap-3'
+      disabled={isPending}
+      onClick={() => {
+        void handleDemoLogin();
+      }}
+    >
+      Entrar como demo
+    </Button>
   );
 }
