@@ -270,7 +270,7 @@ export function ProductExpandedRow({
                                 <TableCell colSpan={5} className='text-right'>
                                   Total
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className='text-right'>
                                   {formatCost(
                                     totalCost > 0 ? totalCost : product.cost,
                                   )}

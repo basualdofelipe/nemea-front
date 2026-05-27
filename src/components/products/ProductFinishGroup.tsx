@@ -142,7 +142,7 @@ export function ProductFinishGroup({
                       </TableCell>
                       <TableCell>{product.color.name}</TableCell>
                       <TableCell>
-                        {product.size.name === 'Talle Unico'
+                        {product.size.name === 'Unico'
                           ? '\u2014'
                           : product.size.name}
                       </TableCell>
