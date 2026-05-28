@@ -52,13 +52,13 @@ export default async function LoginPage({
 
   return (
     <Card className='w-full max-w-sm'>
-      <CardHeader className='items-center space-y-2 text-center'>
+      <CardHeader className='items-center justify-items-center space-y-2 text-center'>
         <Image
           src='/brand/Isotipo.png'
           alt='NEMEA'
-          width={80}
-          height={80}
-          className='size-20 object-contain'
+          width={160}
+          height={160}
+          className='size-40 object-contain'
         />
         <p className='text-muted-foreground text-sm'>
           Gestion de costos para marroquineria
