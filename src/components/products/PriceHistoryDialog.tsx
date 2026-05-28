@@ -91,7 +91,7 @@ export function PriceHistoryDialog({
                 <span className='text-muted-foreground text-sm'>
                   {formatDate(record.createdAt)}
                 </span>
-                <span className='font-medium'>
+                <span className='font-semibold'>
                   ${parseFloat(record.price).toLocaleString('es-AR')}
                 </span>
               </div>

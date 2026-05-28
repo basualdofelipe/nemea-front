@@ -2,13 +2,14 @@ import type { ReactElement } from 'react';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import { apiFetch } from '@/lib/api';
+import type { RoleOption } from '@/types/role';
 import { UsersClient } from './UsersClient';
 
 interface UserRow {
   id: string;
   email: string;
   name: string | null;
-  role: 'admin' | 'user';
+  role: { id: string; name: string };
   isActive: boolean;
   createdAt: string;
 }
@@ -16,11 +17,14 @@ interface UserRow {
 export default async function UsuariosPage(): Promise<ReactElement> {
   const session = await auth();
 
-  if (session?.user?.role !== 'admin') {
+  if (!session?.user?.permissions?.canManageUsers) {
     redirect('/');
   }
 
-  const usersRes = await apiFetch<{ data: UserRow[] }>('/api/users');
+  const [usersRes, rolesRes] = await Promise.all([
+    apiFetch<{ data: UserRow[] }>('/api/users'),
+    apiFetch<{ data: RoleOption[] }>('/api/roles'),
+  ]);
 
   return (
     <div className='space-y-6'>
@@ -31,7 +35,7 @@ export default async function UsuariosPage(): Promise<ReactElement> {
         </p>
       </div>
 
-      <UsersClient users={usersRes.data} />
+      <UsersClient users={usersRes.data} roles={rolesRes.data} />
     </div>
   );
 }

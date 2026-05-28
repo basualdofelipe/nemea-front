@@ -146,7 +146,7 @@ export function ProductEditDialog({
           className='space-y-4'
         >
           <div className='bg-muted/30 rounded-md border p-3'>
-            <p className='text-muted-foreground text-xs font-medium uppercase'>
+            <p className='text-muted-foreground text-xs font-semibold uppercase'>
               SKU Preview
             </p>
             <p className='font-mono text-lg'>{skuPreview}</p>

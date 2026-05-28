@@ -1,9 +1,9 @@
 'use client';
 
 import type { ReactElement } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import {
   Home,
   BookOpen,
@@ -11,7 +11,11 @@ import {
   Package,
   ShoppingBag,
   Receipt,
+  Calculator,
+  LineChart,
   Users,
+  Settings,
+  Shield,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -24,6 +28,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { usePermissions } from '@/hooks/usePermissions';
 
 interface NavItem {
   label: string;
@@ -33,28 +38,17 @@ interface NavItem {
 
 const TOP_ITEMS: NavItem[] = [{ label: 'Inicio', href: '/', icon: Home }];
 
-const FINANZAS_ITEMS: NavItem[] = [
-  { label: 'Gastos', href: '/finanzas/gastos', icon: Receipt },
-];
-
-const PRODUCTOS_ITEMS: NavItem[] = [
-  { label: 'Productos', href: '/productos', icon: ShoppingBag },
-];
-
-const DATOS_BASE_ITEMS: NavItem[] = [
-  { label: 'Catalogos', href: '/catalogos', icon: BookOpen },
-  { label: 'Proveedores', href: '/proveedores', icon: Truck },
-  { label: 'Insumos', href: '/insumos', icon: Package },
-];
-
-const ADMIN_ITEMS: NavItem[] = [
-  { label: 'Usuarios', href: '/usuarios', icon: Users },
-];
-
 export function AppSidebar(): ReactElement {
   const pathname = usePathname();
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.role === 'admin';
+  const {
+    canManageUsers,
+    canManageConfig,
+    canViewProducts,
+    canViewSupplies,
+    canViewExpenses,
+    canUseCalculator,
+    canManageScenarios,
+  } = usePermissions();
 
   function isActive(href: string): boolean {
     if (href === '/') {
@@ -84,12 +78,20 @@ export function AppSidebar(): ReactElement {
     <Sidebar collapsible='icon'>
       <SidebarHeader className='p-4'>
         <Link href='/' className='flex items-center gap-2'>
-          <span className='engraving-title text-primary text-xl tracking-widest group-data-[collapsible=icon]:hidden'>
-            NEMEA
-          </span>
-          <span className='engraving-title text-primary hidden text-xl tracking-widest group-data-[collapsible=icon]:block'>
-            N
-          </span>
+          <Image
+            src='/brand/logo.png'
+            alt='NEMEA'
+            width={100}
+            height={100}
+            className='h-12 w-auto object-contain group-data-[collapsible=icon]:hidden'
+          />
+          <Image
+            src='/brand/Isotipo.png'
+            alt='NEMEA'
+            width={28}
+            height={28}
+            className='hidden size-7 object-contain group-data-[collapsible=icon]:block'
+          />
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -98,28 +100,108 @@ export function AppSidebar(): ReactElement {
             <SidebarMenu>{renderNavItems(TOP_ITEMS)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Finanzas</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>{renderNavItems(FINANZAS_ITEMS)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>{renderNavItems(PRODUCTOS_ITEMS)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Datos base</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>{renderNavItems(DATOS_BASE_ITEMS)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        {isAdmin && (
+
+        {canViewExpenses && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Finanzas</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {renderNavItems([
+                  { label: 'Gastos', href: '/finanzas/gastos', icon: Receipt },
+                ])}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {(canUseCalculator || canManageScenarios) && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Herramientas</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {canUseCalculator &&
+                  renderNavItems([
+                    {
+                      label: 'Calculadora',
+                      href: '/calculadora',
+                      icon: Calculator,
+                    },
+                  ])}
+                {canManageScenarios &&
+                  renderNavItems([
+                    {
+                      label: 'Escenarios',
+                      href: '/escenarios',
+                      icon: LineChart,
+                    },
+                  ])}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {canViewProducts && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {renderNavItems([
+                  {
+                    label: 'Productos',
+                    href: '/productos',
+                    icon: ShoppingBag,
+                  },
+                ])}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {(canViewProducts || canViewSupplies) && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Datos base</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {canViewProducts &&
+                  renderNavItems([
+                    {
+                      label: 'Catalogos',
+                      href: '/catalogos',
+                      icon: BookOpen,
+                    },
+                  ])}
+                {canViewSupplies &&
+                  renderNavItems([
+                    {
+                      label: 'Proveedores',
+                      href: '/proveedores',
+                      icon: Truck,
+                    },
+                    { label: 'Insumos', href: '/insumos', icon: Package },
+                  ])}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {(canManageUsers || canManageConfig) && (
           <SidebarGroup>
             <SidebarGroupLabel>Admin</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>{renderNavItems(ADMIN_ITEMS)}</SidebarMenu>
+              <SidebarMenu>
+                {canManageUsers &&
+                  renderNavItems([
+                    { label: 'Usuarios', href: '/usuarios', icon: Users },
+                    { label: 'Roles', href: '/roles', icon: Shield },
+                  ])}
+                {canManageConfig &&
+                  renderNavItems([
+                    {
+                      label: 'Config Tiendanube',
+                      href: '/configuracion/tiendanube',
+                      icon: Settings,
+                    },
+                  ])}
+              </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         )}

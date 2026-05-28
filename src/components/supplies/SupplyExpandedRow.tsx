@@ -22,7 +22,7 @@ interface SupplyExpandedRowProps {
   supply: Supply;
   supplyTypes: SupplyType[];
   suppliers: Supplier[];
-  isAdmin: boolean;
+  canEdit: boolean;
   colSpan: number;
 }
 
@@ -30,7 +30,7 @@ export function SupplyExpandedRow({
   supply,
   supplyTypes,
   suppliers,
-  isAdmin,
+  canEdit,
   colSpan,
 }: SupplyExpandedRowProps): ReactElement {
   const router = useRouter();
@@ -66,13 +66,13 @@ export function SupplyExpandedRow({
           <div className='space-y-3'>
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   Notas
                 </p>
                 <p className='text-sm'>{supply.notes ?? 'Sin notas'}</p>
               </div>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   Proveedor
                 </p>
                 <Link
@@ -87,16 +87,16 @@ export function SupplyExpandedRow({
 
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
-                <p className='text-muted-foreground text-xs font-medium uppercase'>
+                <p className='text-muted-foreground text-xs font-semibold uppercase'>
                   Precio actual
                 </p>
-                <p className='text-sm font-medium'>
+                <p className='text-sm font-semibold'>
                   {formatPrice(supply.currentPrice, supply.unitType)}
                 </p>
               </div>
               {supply.lastPriceUpdate && (
                 <div>
-                  <p className='text-muted-foreground text-xs font-medium uppercase'>
+                  <p className='text-muted-foreground text-xs font-semibold uppercase'>
                     Ultima actualizacion
                   </p>
                   <p className='text-muted-foreground inline-flex items-center gap-1 text-sm'>
@@ -107,7 +107,7 @@ export function SupplyExpandedRow({
               )}
             </div>
 
-            {isAdmin && (
+            {canEdit && (
               <div className='flex flex-wrap items-center gap-2 border-t pt-3'>
                 <Button
                   size='sm'

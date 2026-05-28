@@ -33,6 +33,8 @@ interface BomGroupEditorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
+  groupName?: string;
+  onDivergenceDetected?: (hasDivergent: boolean) => void;
 }
 
 function serializeBom(items: { supplyId: string; quantity: string }[]): string {
@@ -48,6 +50,8 @@ export function BomGroupEditorDialog({
   open,
   onOpenChange,
   onSuccess,
+  groupName,
+  onDivergenceDetected,
 }: BomGroupEditorDialogProps): ReactElement {
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
@@ -105,6 +109,7 @@ export function BomGroupEditorDialog({
         }
       }
       setDivergentIds(divergent);
+      onDivergenceDetected?.(divergent.size > 0);
 
       // Pre-populate rows with majority BOM
       const majorityItems = JSON.parse(majorityBom) as {
@@ -125,7 +130,7 @@ export function BomGroupEditorDialog({
     } finally {
       setIsLoading(false);
     }
-  }, [token, products]);
+  }, [token, products, onDivergenceDetected]);
 
   useEffect(() => {
     if (open) {
@@ -210,7 +215,11 @@ export function BomGroupEditorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-h-[85vh] overflow-y-auto sm:max-w-2xl'>
         <DialogHeader>
-          <DialogTitle>Editar BOM grupal</DialogTitle>
+          <DialogTitle>
+            {groupName
+              ? `Editar BOM grupal \u2014 ${groupName}`
+              : 'Editar BOM grupal'}
+          </DialogTitle>
         </DialogHeader>
 
         {isLoading ? (
@@ -220,7 +229,7 @@ export function BomGroupEditorDialog({
         ) : (
           <div className='space-y-4'>
             <div>
-              <p className='mb-2 text-sm font-medium'>Productos</p>
+              <p className='mb-2 text-sm font-semibold'>Productos</p>
               <div className='max-h-40 space-y-1 overflow-y-auto rounded-md border p-2'>
                 {products.map((product) => (
                   <label
@@ -249,7 +258,7 @@ export function BomGroupEditorDialog({
             </div>
 
             <div>
-              <p className='mb-2 text-sm font-medium'>Materiales</p>
+              <p className='mb-2 text-sm font-semibold'>Materiales</p>
               <div className='space-y-2'>
                 {rows.length === 0 ? (
                   <p className='text-muted-foreground py-2 text-center text-sm'>
@@ -257,7 +266,7 @@ export function BomGroupEditorDialog({
                   </p>
                 ) : (
                   <>
-                    <div className='text-muted-foreground grid grid-cols-[1fr_100px_60px_40px] gap-2 text-xs font-medium'>
+                    <div className='text-muted-foreground grid grid-cols-[1fr_100px_60px_40px] gap-2 text-xs font-semibold'>
                       <span>Insumo</span>
                       <span>Cantidad</span>
                       <span>Unidad</span>

@@ -101,7 +101,7 @@ export function BatchPriceDialog({
 
         <div className='space-y-4'>
           <div>
-            <p className='mb-2 text-sm font-medium'>Productos</p>
+            <p className='mb-2 text-sm font-semibold'>Productos</p>
             <div className='max-h-40 space-y-1 overflow-y-auto rounded-md border p-2'>
               {products.map((product) => (
                 <label
@@ -124,7 +124,7 @@ export function BatchPriceDialog({
           </div>
 
           <div>
-            <p className='mb-2 text-sm font-medium'>Nuevo precio de venta</p>
+            <p className='mb-2 text-sm font-semibold'>Nuevo precio de venta</p>
             <Input
               type='number'
               step='0.01'
