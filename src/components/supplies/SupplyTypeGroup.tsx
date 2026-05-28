@@ -26,7 +26,7 @@ interface SupplyTypeGroupProps {
   supplies: Supply[];
   supplyTypes: SupplyType[];
   allSuppliers: Supplier[];
-  isAdmin: boolean;
+  canEdit: boolean;
 }
 
 export function SupplyTypeGroup({
@@ -34,7 +34,7 @@ export function SupplyTypeGroup({
   supplies,
   supplyTypes,
   allSuppliers,
-  isAdmin,
+  canEdit,
 }: SupplyTypeGroupProps): ReactElement {
   const [isOpen, setIsOpen] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -49,7 +49,7 @@ export function SupplyTypeGroup({
             isOpen ? '' : '-rotate-90'
           }`}
         />
-        <span className='font-medium'>{typeName}</span>
+        <span className='font-semibold'>{typeName}</span>
         <Badge variant='secondary' className='ml-1'>
           {supplies.length} {supplies.length === 1 ? 'insumo' : 'insumos'}
         </Badge>
@@ -62,7 +62,7 @@ export function SupplyTypeGroup({
               <TableRow>
                 <TableHead>Nombre</TableHead>
                 <TableHead>Proveedor</TableHead>
-                <TableHead>Precio Actual</TableHead>
+                <TableHead className='text-right'>Precio Actual</TableHead>
                 <TableHead>Estado</TableHead>
               </TableRow>
             </TableHeader>
@@ -89,11 +89,11 @@ export function SupplyTypeGroup({
                         )
                       }
                     >
-                      <TableCell className='font-medium'>
+                      <TableCell className='font-semibold'>
                         {supply.name}
                       </TableCell>
                       <TableCell>{supply.supplier.name}</TableCell>
-                      <TableCell>
+                      <TableCell className='text-right'>
                         {formatPrice(supply.currentPrice, supply.unitType)}
                       </TableCell>
                       <TableCell>
@@ -110,7 +110,7 @@ export function SupplyTypeGroup({
                         supply={supply}
                         supplyTypes={supplyTypes}
                         suppliers={allSuppliers}
-                        isAdmin={isAdmin}
+                        canEdit={canEdit}
                         colSpan={colSpan}
                       />
                     )}

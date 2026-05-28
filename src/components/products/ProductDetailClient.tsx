@@ -46,25 +46,12 @@ import {
   formatSellingPrice,
   getProductDisplayName,
 } from './types';
+import type { SupplyOption } from '@/types/supply';
+import { UNIT_LABELS } from '@/types/supply';
 import { AddSellingPriceInline } from './AddSellingPriceInline';
 import { BomEditorDialog } from './BomEditorDialog';
 import { PriceHistoryDialog } from './PriceHistoryDialog';
 import { ProductEditDialog } from './ProductEditDialog';
-
-const UNIT_LABELS: Record<string, string> = {
-  m2: 'm\u00B2',
-  unidad: 'un.',
-  metro: 'm',
-  kg: 'kg',
-};
-
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
-}
 
 interface ProductDetailClientProps {
   product: Product & { costBreakdown: CostBreakdownItem[] | null };
@@ -75,7 +62,7 @@ interface ProductDetailClientProps {
   colors: CatalogItem[];
   sizes: CatalogItem[];
   supplies: SupplyOption[];
-  isAdmin: boolean;
+  canEdit: boolean;
 }
 
 export function ProductDetailClient({
@@ -87,7 +74,7 @@ export function ProductDetailClient({
   colors,
   sizes,
   supplies,
-  isAdmin,
+  canEdit,
 }: ProductDetailClientProps): ReactElement {
   const router = useRouter();
   const { data: session } = useSession();
@@ -225,7 +212,7 @@ export function ProductDetailClient({
                       );
                     })}
                     {bomItems.length > 0 && (
-                      <TableRow className='font-medium'>
+                      <TableRow className='font-semibold'>
                         <TableCell colSpan={5} className='text-right'>
                           Total
                         </TableCell>
@@ -250,7 +237,7 @@ export function ProductDetailClient({
         <CardContent>
           <div className='grid gap-4 sm:grid-cols-3'>
             <div>
-              <p className='text-muted-foreground text-xs font-medium uppercase'>
+              <p className='text-muted-foreground text-xs font-semibold uppercase'>
                 Costo total
               </p>
               <p className='text-lg font-semibold'>
@@ -260,7 +247,7 @@ export function ProductDetailClient({
               </p>
             </div>
             <div>
-              <p className='text-muted-foreground text-xs font-medium uppercase'>
+              <p className='text-muted-foreground text-xs font-semibold uppercase'>
                 Precio de venta
               </p>
               <p className='text-lg font-semibold'>
@@ -270,7 +257,7 @@ export function ProductDetailClient({
               </p>
             </div>
             <div>
-              <p className='text-muted-foreground text-xs font-medium uppercase'>
+              <p className='text-muted-foreground text-xs font-semibold uppercase'>
                 Margen
               </p>
               <p className='text-lg font-semibold'>
@@ -286,7 +273,7 @@ export function ProductDetailClient({
 
           {product.costWarnings.length > 0 && (
             <div className='mt-4 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950'>
-              <div className='flex items-center gap-2 text-sm font-medium text-amber-800 dark:text-amber-200'>
+              <div className='flex items-center gap-2 text-sm font-semibold text-amber-800 dark:text-amber-200'>
                 <AlertTriangle className='size-4' />
                 Advertencias
               </div>
@@ -301,7 +288,7 @@ export function ProductDetailClient({
       </Card>
 
       {/* Admin Actions */}
-      {isAdmin && (
+      {canEdit && (
         <Card>
           <CardHeader>
             <CardTitle>Acciones</CardTitle>

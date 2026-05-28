@@ -8,14 +8,14 @@ import { Input } from '@/components/ui/input';
 
 interface CatalogItemRowProps {
   item: { id: string; name: string };
-  isAdmin: boolean;
+  canEdit: boolean;
   onUpdate: (id: string, name: string) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 }
 
 export function CatalogItemRow({
   item,
-  isAdmin,
+  canEdit,
   onUpdate,
   onDelete,
 }: CatalogItemRowProps): ReactElement {
@@ -102,7 +102,7 @@ export function CatalogItemRow({
   return (
     <div className='border-border hover:bg-muted/50 group flex items-center justify-between border-b px-2 py-2'>
       <span className='text-sm'>{item.name}</span>
-      {isAdmin && (
+      {canEdit && (
         <div className='flex items-center gap-1 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100'>
           <Button
             size='icon'

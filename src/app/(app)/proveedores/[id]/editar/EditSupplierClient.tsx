@@ -6,23 +6,11 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { apiClientFetch } from '@/lib/api-client';
+import { cleanSupplierData } from '@/lib/suppliers';
 import {
   SupplierForm,
   type SupplierFormData,
 } from '@/components/suppliers/SupplierForm';
-
-function cleanSupplierData(
-  data: SupplierFormData,
-): Record<string, string | undefined> {
-  return {
-    name: data.name,
-    address: data.address || undefined,
-    email: data.email || undefined,
-    phone: data.phone || undefined,
-    whatsapp: data.whatsapp || undefined,
-    description: data.description || undefined,
-  };
-}
 
 interface Supplier {
   id: string;

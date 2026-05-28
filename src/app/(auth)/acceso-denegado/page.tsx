@@ -20,7 +20,8 @@ export default function AccesoDenegadoPage(): ReactElement {
       </CardHeader>
       <CardContent className='space-y-4 text-center'>
         <p className='text-muted-foreground text-sm'>
-          Tu cuenta no tiene acceso a Nemea. Contacta al administrador.
+          Tu cuenta no esta habilitada para acceder a Nemea. Si crees que esto
+          es un error, contacta al administrador en basualdofelipe@gmail.com.
         </p>
         <Button
           variant='outline'

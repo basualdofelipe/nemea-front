@@ -1,8 +1,10 @@
 import type { ReactElement } from 'react';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { auth, signIn } from '@/auth';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { DemoLoginButton } from './DemoLoginButton';
 
 interface LoginPageProps {
   searchParams: Promise<{ callbackUrl?: string }>;
@@ -50,10 +52,14 @@ export default async function LoginPage({
 
   return (
     <Card className='w-full max-w-sm'>
-      <CardHeader className='items-center space-y-2 text-center'>
-        <h1 className='engraving-title text-primary text-4xl tracking-widest'>
-          NEMEA
-        </h1>
+      <CardHeader className='items-center justify-items-center space-y-2 text-center'>
+        <Image
+          src='/brand/Isotipo.png'
+          alt='NEMEA'
+          width={160}
+          height={160}
+          className='size-40 object-contain'
+        />
         <p className='text-muted-foreground text-sm'>
           Gestion de costos para marroquineria
         </p>
@@ -70,6 +76,19 @@ export default async function LoginPage({
             Ingresar con Google
           </Button>
         </form>
+        {process.env.NEXT_PUBLIC_DEMO_LOGIN_ENABLED === 'true' && (
+          <>
+            <div className='relative my-3'>
+              <div className='absolute inset-0 flex items-center'>
+                <span className='w-full border-t' />
+              </div>
+              <div className='relative flex justify-center text-xs uppercase'>
+                <span className='bg-card text-muted-foreground px-2'>o</span>
+              </div>
+            </div>
+            <DemoLoginButton />
+          </>
+        )}
       </CardContent>
     </Card>
   );

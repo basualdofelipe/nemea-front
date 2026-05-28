@@ -35,12 +35,12 @@ interface Supplier {
 
 interface SupplierTableProps {
   initialSuppliers: Supplier[];
-  isAdmin: boolean;
+  canEdit: boolean;
 }
 
 export function SupplierTable({
   initialSuppliers,
-  isAdmin,
+  canEdit,
 }: SupplierTableProps): ReactElement {
   const router = useRouter();
   const { data: session } = useSession();
@@ -88,7 +88,7 @@ export function SupplierTable({
             className='pl-9'
           />
         </div>
-        {isAdmin && (
+        {canEdit && (
           <Button onClick={() => router.push('/proveedores/nuevo')}>
             <Plus className='mr-1 size-4' />
             Nuevo Proveedor
@@ -105,14 +105,14 @@ export function SupplierTable({
               <TableHead className='hidden md:table-cell'>Telefono</TableHead>
               <TableHead className='hidden lg:table-cell'>WhatsApp</TableHead>
               <TableHead>Estado</TableHead>
-              {isAdmin && <TableHead className='w-12' />}
+              {canEdit && <TableHead className='w-12' />}
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={isAdmin ? 6 : 5}
+                  colSpan={canEdit ? 6 : 5}
                   className='text-muted-foreground h-24 text-center'
                 >
                   {search
@@ -126,7 +126,9 @@ export function SupplierTable({
                   key={supplier.id}
                   className={supplier.isActive ? '' : 'opacity-50'}
                 >
-                  <TableCell className='font-medium'>{supplier.name}</TableCell>
+                  <TableCell className='font-semibold'>
+                    {supplier.name}
+                  </TableCell>
                   <TableCell className='hidden md:table-cell'>
                     {supplier.email ?? '-'}
                   </TableCell>
@@ -137,7 +139,7 @@ export function SupplierTable({
                     {supplier.whatsapp ?? '-'}
                   </TableCell>
                   <TableCell>
-                    {isAdmin ? (
+                    {canEdit ? (
                       <Switch
                         checked={supplier.isActive}
                         onCheckedChange={() =>
@@ -152,7 +154,7 @@ export function SupplierTable({
                       </Badge>
                     )}
                   </TableCell>
-                  {isAdmin && (
+                  {canEdit && (
                     <TableCell>
                       <Button
                         size='icon'

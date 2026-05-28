@@ -25,7 +25,7 @@ const DIMENSIONS = [
 
 export default async function CatalogosPage(): Promise<ReactElement> {
   const session = await auth();
-  const isAdmin = session?.user?.role === 'admin';
+  const canEdit = session?.user?.permissions?.canEditProducts ?? false;
 
   const results = await Promise.all(
     DIMENSIONS.map((d) => apiFetch<CatalogResponse>(`/api/catalogs/${d.key}`)),
@@ -53,7 +53,7 @@ export default async function CatalogosPage(): Promise<ReactElement> {
             <CatalogTabContent
               dimension={d.key}
               initialItems={results[i].data}
-              isAdmin={isAdmin}
+              canEdit={canEdit}
             />
           </TabsContent>
         ))}

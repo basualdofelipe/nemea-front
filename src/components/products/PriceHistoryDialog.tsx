@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { apiClientFetch } from '@/lib/api-client';
+import { formatDate } from '@/lib/formatters';
 import type { PriceRecord } from './types';
 
 interface PriceHistoryDialogProps {
@@ -63,15 +64,6 @@ export function PriceHistoryDialog({
     void fetchPrices(productId);
   }, [open, productId, fetchPrices]);
 
-  function formatDate(iso: string): string {
-    const date = new Date(iso);
-    return date.toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -99,7 +91,7 @@ export function PriceHistoryDialog({
                 <span className='text-muted-foreground text-sm'>
                   {formatDate(record.createdAt)}
                 </span>
-                <span className='font-medium'>
+                <span className='font-semibold'>
                   ${parseFloat(record.price).toLocaleString('es-AR')}
                 </span>
               </div>

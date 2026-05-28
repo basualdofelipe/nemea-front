@@ -8,6 +8,7 @@ import type {
   Product,
 } from '@/components/products/types';
 import { ProductDetailClient } from '@/components/products/ProductDetailClient';
+import type { SupplyOption } from '@/types/supply';
 
 interface ProductWithCostResponse extends Product {
   costBreakdown: Array<{
@@ -22,14 +23,6 @@ interface ProductWithCostResponse extends Product {
   }> | null;
 }
 
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
-}
-
 export default async function ProductDetailPage({
   params,
 }: {
@@ -37,7 +30,7 @@ export default async function ProductDetailPage({
 }): Promise<ReactElement> {
   const { id } = await params;
   const session = await auth();
-  const isAdmin = session?.user?.role === 'admin';
+  const canEdit = session?.user?.permissions?.canEditProducts ?? false;
 
   let productData: ProductWithCostResponse;
   try {
@@ -77,7 +70,7 @@ export default async function ProductDetailPage({
       colors={colorsRes.data}
       sizes={sizesRes.data}
       supplies={suppliesRes.data}
-      isAdmin={isAdmin}
+      canEdit={canEdit}
     />
   );
 }

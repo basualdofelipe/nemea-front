@@ -22,7 +22,7 @@ interface CatalogResponse {
 interface CatalogTabContentProps {
   dimension: string;
   initialItems: CatalogItem[];
-  isAdmin: boolean;
+  canEdit: boolean;
 }
 
 function sortByName(items: CatalogItem[]): CatalogItem[] {
@@ -34,7 +34,7 @@ function sortByName(items: CatalogItem[]): CatalogItem[] {
 export function CatalogTabContent({
   dimension,
   initialItems,
-  isAdmin,
+  canEdit,
 }: CatalogTabContentProps): ReactElement {
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
@@ -119,7 +119,7 @@ export function CatalogTabContent({
 
   return (
     <div className='space-y-2'>
-      {isAdmin && (
+      {canEdit && (
         <div className='mb-4'>
           {isAdding ? (
             <div className='flex items-center gap-2'>
@@ -181,7 +181,7 @@ export function CatalogTabContent({
             <CatalogItemRow
               key={item.id}
               item={item}
-              isAdmin={isAdmin}
+              canEdit={canEdit}
               onUpdate={handleUpdate}
               onDelete={handleDelete}
             />

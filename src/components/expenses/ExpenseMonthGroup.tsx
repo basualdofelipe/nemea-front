@@ -28,7 +28,7 @@ import {
 interface ExpenseMonthGroupProps {
   monthKey: string;
   expenses: Expense[];
-  isAdmin: boolean;
+  canEdit: boolean;
   onEdit: (expense: Expense) => void;
   onDelete: (expense: Expense) => void;
 }
@@ -36,7 +36,7 @@ interface ExpenseMonthGroupProps {
 export function ExpenseMonthGroup({
   monthKey,
   expenses,
-  isAdmin,
+  canEdit,
   onEdit,
   onDelete,
 }: ExpenseMonthGroupProps): ReactElement {
@@ -47,7 +47,7 @@ export function ExpenseMonthGroup({
     0,
   );
 
-  const colSpan = isAdmin ? 5 : 4;
+  const colSpan = canEdit ? 5 : 4;
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} defaultOpen>
@@ -57,7 +57,7 @@ export function ExpenseMonthGroup({
             isOpen ? '' : '-rotate-90'
           }`}
         />
-        <span className='font-medium'>{formatMonthLabel(monthKey)}</span>
+        <span className='font-semibold'>{formatMonthLabel(monthKey)}</span>
         <Badge variant='secondary' className='ml-1'>
           {expenses.length} {expenses.length === 1 ? 'gasto' : 'gastos'}
         </Badge>
@@ -75,7 +75,7 @@ export function ExpenseMonthGroup({
                 <TableHead>Concepto</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead className='text-right'>Monto</TableHead>
-                {isAdmin && (
+                {canEdit && (
                   <TableHead className='w-[100px] text-right'>
                     Acciones
                   </TableHead>
@@ -99,15 +99,15 @@ export function ExpenseMonthGroup({
                     <TableCell>{expense.concept}</TableCell>
                     <TableCell>
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${getCategoryColor(expense.category.name)}`}
+                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${getCategoryColor(expense.category.name)}`}
                       >
                         {expense.category.name}
                       </span>
                     </TableCell>
-                    <TableCell className='text-right font-medium'>
+                    <TableCell className='text-right font-semibold'>
                       ${formatAmount(expense.amount)}
                     </TableCell>
-                    {isAdmin && (
+                    {canEdit && (
                       <TableCell className='text-right'>
                         <div className='flex justify-end gap-1'>
                           <Button

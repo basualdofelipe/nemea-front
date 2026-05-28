@@ -3,18 +3,10 @@
 import type { ReactElement } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { AlertTriangle, ChevronsUpDown, Plus, Trash2 } from 'lucide-react';
+import { AlertTriangle, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
 import {
   Dialog,
   DialogContent,
@@ -23,30 +15,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { apiClientFetch } from '@/lib/api-client';
+import type { SupplyOption } from '@/types/supply';
+import { UNIT_LABELS } from '@/types/supply';
+import { SupplyCombobox } from './SupplyCombobox';
 import type { BomItem, Product } from './types';
 import { getProductDisplayName } from './types';
-
-const UNIT_LABELS: Record<string, string> = {
-  m2: 'm\u00B2',
-  unidad: 'un.',
-  metro: 'm',
-  kg: 'kg',
-};
-
-interface SupplyOption {
-  id: string;
-  name: string;
-  unitType: 'm2' | 'unidad' | 'metro' | 'kg';
-  isActive: boolean;
-  type: { name: string };
-  supplier?: { name: string };
-}
 
 interface BomRow {
   supplyId: string;
@@ -59,6 +33,8 @@ interface BomGroupEditorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
+  groupName?: string;
+  onDivergenceDetected?: (hasDivergent: boolean) => void;
 }
 
 function serializeBom(items: { supplyId: string; quantity: string }[]): string {
@@ -68,84 +44,14 @@ function serializeBom(items: { supplyId: string; quantity: string }[]): string {
   return JSON.stringify(sorted);
 }
 
-function GroupSupplyCombobox({
-  supplies,
-  value,
-  onChange,
-}: {
-  supplies: SupplyOption[];
-  value: string;
-  onChange: (supplyId: string) => void;
-}): ReactElement {
-  const [open, setOpen] = useState(false);
-
-  const grouped = supplies.reduce<Record<string, SupplyOption[]>>(
-    (acc, supply) => {
-      const typeName = supply.type.name;
-      if (!acc[typeName]) acc[typeName] = [];
-      acc[typeName].push(supply);
-      return acc;
-    },
-    {},
-  );
-
-  const selected = supplies.find((s) => s.id === value);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant='outline'
-          role='combobox'
-          aria-expanded={open}
-          className='w-full justify-between'
-          size='sm'
-        >
-          <span className='truncate'>
-            {selected ? selected.name : 'Seleccionar insumo...'}
-          </span>
-          <ChevronsUpDown className='ml-1 size-3 shrink-0 opacity-50' />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className='w-80 p-0' align='start'>
-        <Command>
-          <CommandInput placeholder='Buscar insumo...' />
-          <CommandList>
-            <CommandEmpty>No se encontraron insumos.</CommandEmpty>
-            {Object.entries(grouped).map(([typeName, typeSupplies]) => (
-              <CommandGroup key={typeName} heading={typeName}>
-                {typeSupplies.map((supply) => (
-                  <CommandItem
-                    key={supply.id}
-                    value={`${supply.name} ${supply.supplier?.name ?? ''}`}
-                    onSelect={() => {
-                      onChange(supply.id);
-                      setOpen(false);
-                    }}
-                  >
-                    <span className='truncate'>{supply.name}</span>
-                    {supply.supplier?.name && (
-                      <span className='text-muted-foreground ml-auto text-xs'>
-                        {supply.supplier.name}
-                      </span>
-                    )}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            ))}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
 export function BomGroupEditorDialog({
   products,
   supplies,
   open,
   onOpenChange,
   onSuccess,
+  groupName,
+  onDivergenceDetected,
 }: BomGroupEditorDialogProps): ReactElement {
   const { data: session } = useSession();
   const token = session?.accessToken ?? '';
@@ -203,6 +109,7 @@ export function BomGroupEditorDialog({
         }
       }
       setDivergentIds(divergent);
+      onDivergenceDetected?.(divergent.size > 0);
 
       // Pre-populate rows with majority BOM
       const majorityItems = JSON.parse(majorityBom) as {
@@ -223,7 +130,7 @@ export function BomGroupEditorDialog({
     } finally {
       setIsLoading(false);
     }
-  }, [token, products]);
+  }, [token, products, onDivergenceDetected]);
 
   useEffect(() => {
     if (open) {
@@ -308,7 +215,11 @@ export function BomGroupEditorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-h-[85vh] overflow-y-auto sm:max-w-2xl'>
         <DialogHeader>
-          <DialogTitle>Editar BOM grupal</DialogTitle>
+          <DialogTitle>
+            {groupName
+              ? `Editar BOM grupal \u2014 ${groupName}`
+              : 'Editar BOM grupal'}
+          </DialogTitle>
         </DialogHeader>
 
         {isLoading ? (
@@ -318,7 +229,7 @@ export function BomGroupEditorDialog({
         ) : (
           <div className='space-y-4'>
             <div>
-              <p className='mb-2 text-sm font-medium'>Productos</p>
+              <p className='mb-2 text-sm font-semibold'>Productos</p>
               <div className='max-h-40 space-y-1 overflow-y-auto rounded-md border p-2'>
                 {products.map((product) => (
                   <label
@@ -347,7 +258,7 @@ export function BomGroupEditorDialog({
             </div>
 
             <div>
-              <p className='mb-2 text-sm font-medium'>Materiales</p>
+              <p className='mb-2 text-sm font-semibold'>Materiales</p>
               <div className='space-y-2'>
                 {rows.length === 0 ? (
                   <p className='text-muted-foreground py-2 text-center text-sm'>
@@ -355,7 +266,7 @@ export function BomGroupEditorDialog({
                   </p>
                 ) : (
                   <>
-                    <div className='text-muted-foreground grid grid-cols-[1fr_100px_60px_40px] gap-2 text-xs font-medium'>
+                    <div className='text-muted-foreground grid grid-cols-[1fr_100px_60px_40px] gap-2 text-xs font-semibold'>
                       <span>Insumo</span>
                       <span>Cantidad</span>
                       <span>Unidad</span>
@@ -366,7 +277,7 @@ export function BomGroupEditorDialog({
                         key={index}
                         className='grid grid-cols-[1fr_100px_60px_40px] items-center gap-2'
                       >
-                        <GroupSupplyCombobox
+                        <SupplyCombobox
                           supplies={supplies.filter((s) => s.isActive)}
                           value={row.supplyId}
                           onChange={(id) => updateRow(index, 'supplyId', id)}
