@@ -4,8 +4,7 @@ import { useState, type ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-
-const DEMO_EMAIL = 'demo@nemea.app';
+import { DEMO_EMAIL } from '@/constants/branding';
 
 export function DemoLoginButton(): ReactElement {
   const router = useRouter();

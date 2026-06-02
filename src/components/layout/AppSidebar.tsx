@@ -29,6 +29,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { usePermissions } from '@/hooks/usePermissions';
+import { APP_NAME } from '@/constants/branding';
 
 interface NavItem {
   label: string;
@@ -80,14 +81,14 @@ export function AppSidebar(): ReactElement {
         <Link href='/' className='flex items-center gap-2'>
           <Image
             src='/brand/logo.png'
-            alt='NEMEA'
+            alt={APP_NAME}
             width={100}
             height={100}
             className='h-12 w-auto object-contain group-data-[collapsible=icon]:hidden'
           />
           <Image
             src='/brand/Isotipo.png'
-            alt='NEMEA'
+            alt={APP_NAME}
             width={28}
             height={28}
             className='hidden size-7 object-contain group-data-[collapsible=icon]:block'
