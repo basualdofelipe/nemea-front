@@ -1,6 +1,6 @@
 # nemea-front
 
-Frontend web app for **Nemea** — a management and pricing tool for a leather-goods business (marroquineria). Covers product/cost management, supplies and supplier catalogs, business expenses, a Tiendanube pricing calculator, pricing scenarios, and an investor dashboard. Talks to a NestJS REST API ([nemea-back](../nemea-back/)). Built deployment-ready for Vercel, but runs locally for evaluation — there is no hosted instance (see [Local setup](#local-setup)).
+Frontend web app for **Hefesto** — a management and pricing tool for a leather-goods business (marroquineria). Covers product/cost management, supplies and supplier catalogs, business expenses, a Tiendanube pricing calculator, pricing scenarios, and an investor dashboard. Talks to a NestJS REST API ([nemea-back](../nemea-back/)). Built deployment-ready for Vercel, but runs locally for evaluation — there is no hosted instance (see [Local setup](#local-setup)).
 
 ---
 
@@ -85,7 +85,7 @@ cp .env.example .env.local
 Edit `.env.local`:
 
 ```env
-NEXT_PUBLIC_APP_NAME=Nemea
+NEXT_PUBLIC_APP_NAME=Hefesto
 NEXT_PUBLIC_API_URL=http://localhost:4000   # nemea-back URL
 NODE_ENV=development
 
