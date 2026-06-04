@@ -5,6 +5,7 @@ import { Poppins, JetBrains_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { SessionProvider } from '@/providers/SessionProvider';
+import { APP_NAME } from '@/constants/branding';
 import './globals.css';
 
 const engravingCC = localFont({
@@ -34,7 +35,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Nemea',
+  title: APP_NAME,
   description: 'Gestion y pricing para marroquineria',
 };
 

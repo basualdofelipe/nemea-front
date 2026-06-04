@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { auth, signIn } from '@/auth';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { APP_NAME } from '@/constants/branding';
 import { DemoLoginButton } from './DemoLoginButton';
 
 interface LoginPageProps {
@@ -55,7 +56,7 @@ export default async function LoginPage({
       <CardHeader className='items-center justify-items-center space-y-2 text-center'>
         <Image
           src='/brand/Isotipo.png'
-          alt='NEMEA'
+          alt={APP_NAME}
           width={160}
           height={160}
           className='size-40 object-contain'

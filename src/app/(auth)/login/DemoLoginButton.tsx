@@ -3,9 +3,9 @@
 import { useState, type ReactElement } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-
-const DEMO_EMAIL = 'demo@nemea.app';
+import { DEMO_EMAIL } from '@/constants/branding';
 
 export function DemoLoginButton(): ReactElement {
   const router = useRouter();
@@ -24,6 +24,9 @@ export function DemoLoginButton(): ReactElement {
 
     if (result?.error !== undefined && result.error !== null) {
       setIsPending(false);
+      toast.error(
+        'No se pudo iniciar el login demo. Verificá la configuración.',
+      );
       return;
     }
 
