@@ -24,7 +24,9 @@ export function DemoLoginButton(): ReactElement {
 
     if (result?.error !== undefined && result.error !== null) {
       setIsPending(false);
-      toast.error('No se pudo iniciar el login demo. Verificá la configuración.');
+      toast.error(
+        'No se pudo iniciar el login demo. Verificá la configuración.',
+      );
       return;
     }
 
