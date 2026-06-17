@@ -5,7 +5,7 @@ const mockUseSession = jest.fn(() => ({
   data: {
     user: {
       id: '11111111-1111-4111-8111-111111111111',
-      email: 'demo@nemea.com',
+      email: 'demo@hefesto.com',
       permissions: { canUseCalculator: true },
     },
     accessToken: 'fake-token',
@@ -129,7 +129,7 @@ describe('CalculadoraClient', () => {
       data: {
         user: {
           id: '11111111-1111-4111-8111-111111111111',
-          email: 'demo@nemea.com',
+          email: 'demo@hefesto.com',
           permissions: { canUseCalculator: true },
         },
         accessToken: 'fake-token',
