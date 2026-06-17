@@ -4,7 +4,7 @@ const mockUseSession = jest.fn(() => ({
   data: {
     user: {
       id: '11111111-1111-4111-8111-111111111111',
-      email: 'admin@nemea.com',
+      email: 'admin@hefesto.com',
       permissions: { canManageUsers: true },
     },
     accessToken: 'fake-token',
@@ -153,7 +153,7 @@ describe('ScenarioEditorClient', () => {
       data: {
         user: {
           id: OWNER_ID,
-          email: 'admin@nemea.com',
+          email: 'admin@hefesto.com',
           permissions: { canManageUsers: true },
         },
         accessToken: 'fake-token',
@@ -181,7 +181,7 @@ describe('ScenarioEditorClient', () => {
       data: {
         user: {
           id: '99999999-9999-4999-8999-999999999999',
-          email: 'other@nemea.com',
+          email: 'other@hefesto.com',
           permissions: { canManageUsers: false },
         },
         accessToken: 'fake-token',

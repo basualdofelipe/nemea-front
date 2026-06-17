@@ -7,7 +7,7 @@ const mockUseSession = jest.fn(() => ({
   data: {
     user: {
       id: 'caller-uuid',
-      email: 'admin@nemea.com',
+      email: 'admin@hefesto.com',
       permissions: { canManageUsers: true },
     },
     accessToken: 'fake-token',
@@ -37,7 +37,7 @@ const OTHER_USER_ID = '44444444-4444-4444-8444-444444444444';
 
 const mockUser = {
   id: VICTIM_ID,
-  email: 'user@nemea.com',
+  email: 'user@hefesto.com',
   name: 'Juan',
   role: { id: EDITOR_ROLE_ID, name: 'EDITOR' },
   isActive: true,
@@ -69,7 +69,7 @@ describe('EditUserDialog', () => {
       data: {
         user: {
           id: 'caller-uuid',
-          email: 'admin@nemea.com',
+          email: 'admin@hefesto.com',
           permissions: { canManageUsers: true },
         },
         accessToken: 'fake-token',
@@ -89,7 +89,7 @@ describe('EditUserDialog', () => {
         onSuccess={jest.fn()}
       />,
     );
-    expect(screen.getByDisplayValue('user@nemea.com')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('user@hefesto.com')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Juan')).toBeInTheDocument();
   });
 
@@ -215,7 +215,7 @@ describe('EditUserDialog', () => {
 
     const otherUser = {
       id: OTHER_USER_ID,
-      email: 'other@nemea.com',
+      email: 'other@hefesto.com',
       name: 'Maria',
       role: { id: ADMIN_ROLE_ID, name: 'ADMIN' },
       isActive: false,
@@ -236,7 +236,7 @@ describe('EditUserDialog', () => {
     await waitFor(() => {
       expect(screen.getByDisplayValue('Maria')).toBeInTheDocument();
     });
-    expect(screen.getByDisplayValue('other@nemea.com')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('other@hefesto.com')).toBeInTheDocument();
   });
 
   // Pin the dialog's behavior when the session is still loading.

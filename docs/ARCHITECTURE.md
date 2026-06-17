@@ -1,6 +1,6 @@
-# Architecture — nemea-front
+# Architecture — hefesto-front
 
-Nemea frontend is a Next.js 16 application using the App Router. It serves as the web interface for a leather-goods business management system, communicating exclusively with a NestJS REST backend over HTTP.
+Hefesto frontend is a Next.js 16 application using the App Router. It serves as the web interface for a leather-goods business management system, communicating exclusively with a NestJS REST backend over HTTP.
 
 ---
 
