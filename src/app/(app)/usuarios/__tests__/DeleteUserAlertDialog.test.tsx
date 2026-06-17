@@ -7,7 +7,7 @@ const mockUseSession = jest.fn(() => ({
   data: {
     user: {
       id: 'caller-uuid',
-      email: 'admin@nemea.com',
+      email: 'admin@hefesto.com',
       permissions: { canManageUsers: true },
     },
     accessToken: 'fake-token',
@@ -35,7 +35,7 @@ const EDITOR_ROLE_ID = '22222222-2222-4222-8222-222222222222';
 
 const mockUser = {
   id: VICTIM_ID,
-  email: 'user@nemea.com',
+  email: 'user@hefesto.com',
   name: 'Juan',
   role: { id: EDITOR_ROLE_ID, name: 'EDITOR' },
   isActive: true,
@@ -62,7 +62,7 @@ describe('DeleteUserAlertDialog', () => {
       data: {
         user: {
           id: 'caller-uuid',
-          email: 'admin@nemea.com',
+          email: 'admin@hefesto.com',
           permissions: { canManageUsers: true },
         },
         accessToken: 'fake-token',
@@ -81,7 +81,7 @@ describe('DeleteUserAlertDialog', () => {
       />,
     );
     expect(screen.getByText(/Eliminar usuario/i)).toBeInTheDocument();
-    expect(screen.getByText('user@nemea.com')).toBeInTheDocument();
+    expect(screen.getByText('user@hefesto.com')).toBeInTheDocument();
     expect(screen.getByText(/Juan/)).toBeInTheDocument();
     expect(screen.getByText(/transferidos/i)).toBeInTheDocument();
   });

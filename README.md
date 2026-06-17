@@ -1,6 +1,6 @@
-# nemea-front
+# hefesto-front
 
-Frontend web app for **Hefesto** — a management and pricing tool for a leather-goods business (marroquineria). Covers product/cost management, supplies and supplier catalogs, business expenses, a Tiendanube pricing calculator, pricing scenarios, and an investor dashboard. Talks to a NestJS REST API ([nemea-back](../nemea-back/)). Built deployment-ready for Vercel, but runs locally for evaluation — there is no hosted instance (see [Local setup](#local-setup)).
+Frontend web app for **Hefesto** — a management and pricing tool for a leather-goods business (marroquineria). Covers product/cost management, supplies and supplier catalogs, business expenses, a Tiendanube pricing calculator, pricing scenarios, and an investor dashboard. Talks to a NestJS REST API ([hefesto-back](../hefesto-back/)). Built deployment-ready for Vercel, but runs locally for evaluation — there is no hosted instance (see [Local setup](#local-setup)).
 
 ---
 
@@ -62,7 +62,7 @@ The JWT session stores `backendToken` (passed as `Authorization: Bearer` on ever
 
 - Node.js >= 20 (matches `@types/node ^20`)
 - npm >= 9
-- A running instance of **nemea-back** (default: `http://localhost:4000`)
+- A running instance of **hefesto-back** (default: `http://localhost:4000`)
 
 ---
 
@@ -72,7 +72,7 @@ The JWT session stores `backendToken` (passed as `Authorization: Bearer` on ever
 
 ```bash
 git clone <repo-url>
-cd nemea-front
+cd hefesto-front
 npm install
 ```
 
@@ -86,7 +86,7 @@ Edit `.env.local`:
 
 ```env
 NEXT_PUBLIC_APP_NAME=Hefesto
-NEXT_PUBLIC_API_URL=http://localhost:4000   # nemea-back URL
+NEXT_PUBLIC_API_URL=http://localhost:4000   # hefesto-back URL
 NODE_ENV=development
 
 # Auth.js v5
@@ -185,7 +185,7 @@ src/
 
 ## Backend connection
 
-All API calls go to `NEXT_PUBLIC_API_URL` (the nemea-back NestJS server).
+All API calls go to `NEXT_PUBLIC_API_URL` (the hefesto-back NestJS server).
 
 - **Server Components** use `apiFetch()` from `src/lib/api.ts` — reads the Auth.js session server-side and attaches the `Authorization: Bearer <backendToken>` header automatically.
 - **Client Components** use `apiClientFetch()` from `src/lib/api-client.ts` — the token is passed in explicitly from `useSession()`.
